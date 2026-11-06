@@ -39,6 +39,6 @@ def test_plan_and_tracking_row_shapes():
     assert len(row) == len(tabs.HEADERS[tabs.PLAN])
     alloc = json.loads(row[8])
     assert {x["asset_id"] for x in alloc} <= {"TK12", "QTP"}
-    assert abs(sum(x["pct"] for x in alloc) - 100) < 0.5 and alloc[0]["ly_do"]
+    assert abs(sum(x["pct"] for x in alloc) - 1) < 0.005 and alloc[0]["ly_do"]
     t = tracking_row("G", date(2026, 11, 6), 5e6, {"TK12": 5e6}, plan, 0.0, 3, {"TK12": 1.0}, "t")
     assert len(t) == len(tabs.HEADERS[tabs.TRACKING])

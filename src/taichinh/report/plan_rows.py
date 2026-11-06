@@ -19,7 +19,7 @@ STOCK_REASON = "Cổ phiếu anh chọn, tăng trưởng nhưng rủi ro riêng 
 
 def allocation_list(weights: dict[str, float], cma_to_asset: dict[str, str]) -> list[dict]:
     items = [
-        {"asset_id": cma_to_asset.get(k, k), "pct": round(w * 100, 1),
+        {"asset_id": cma_to_asset.get(k, k), "pct": round(w, 4),
          "ly_do": REASON_VI.get(k, STOCK_REASON)}
         for k, w in sorted(weights.items(), key=lambda kv: -kv[1]) if w > 0.0005
     ]

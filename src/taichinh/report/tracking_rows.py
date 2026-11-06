@@ -61,7 +61,7 @@ def tracking_row(
     gap_months = round(gap / pmt, 1) if pmt > 0 else 0.0
     real = {a: v / actual for a, v in by_asset.items()} if actual > 0 else {}
     drift = drift_after_lots(target_pct, real) if real else {}
-    drift_json = [{"asset_id": a, "lech_pct": round(d * 100, 1)}
+    drift_json = [{"asset_id": a, "lech_pct": round(d, 4)}
                   for a, d in sorted(drift.items(), key=lambda kv: -abs(kv[1]))]
     return [goal_id, today.isoformat(), round(actual), round(exp), bool(on_track), gap_months,
             json.dumps(drift_json, ensure_ascii=False), round(pmt), run_at]
