@@ -6,7 +6,8 @@ var ESSENTIAL_RATIO_MAX = 0.75;
 var MIN_SAVINGS_RATE = 0.1;
 var HIGH_DEBT_RATE_PCT = 15;
 var CUT_VARIABLE_RATIO = 0.2;
-var MAX_LEVERS = 6;
+var MAX_LEVERS = 8;
+var RAISE_INCOME_STEPS_TRIEU = [1, 2, 5];
 var PRIORITY_RANK = { cao: 1, vua: 2, thap: 3 };
 
 function monthlyAmount(row) {
@@ -58,14 +59,19 @@ function buildLevers(rows, goals, config, tyGia) {
     var pct = readRatePercent(r.lai_suat_nam);
     if (r.loai === 'no' && pct !== null && pct > HIGH_DEBT_RATE_PCT) out.push(lever('Trả sớm ' + r.ten + ' (lãi ' + roundTo(pct, 1) + '%/năm)', toNumberOrZero(r.so_tien) * pct / 100 / 12));
   });
+  RAISE_INCOME_STEPS_TRIEU.forEach(function (t) { out.push(lever('Tăng thu nhập +' + t + ' triệu/tháng, gửi hết phần tăng', t * 1000000)); });
   out.sort(function (a, b) { return b.som_hon_thang - a.som_hon_thang || b.tiet_kiem_thang - a.tiet_kiem_thang; });
   return out.slice(0, MAX_LEVERS);
 }
 
-function directionReason(thu, essentialRatio, savingsRate) {
+function directionReason(thu, essentialRatio, savingsRate, thieu, cutMax) {
   if (thu <= 0) return 'Chưa có khoản thu nhập nào trong ngân sách. Thêm lương và các khoản thu để tính được.';
   if (essentialRatio > ESSENTIAL_RATIO_MAX) return 'Chi cố định đã chiếm ' + formatPercent(essentialRatio) + ' thu nhập, khó cắt thêm. Tăng thu nhập hiệu quả hơn.';
   if (savingsRate < MIN_SAVINGS_RATE) return 'Tỷ lệ tiết kiệm mới ' + formatPercent(savingsRate) + ' (dưới 10%). Tăng thu nhập sẽ giúp nhiều hơn.';
+  if (thieu > cutMax) {
+    return 'Cắt 20% chi linh hoạt chỉ thêm ' + formatShortVnd(cutMax) + ' mỗi tháng, mục tiêu còn thiếu ' + formatShortVnd(thieu) +
+      '. Phải tăng thu nhập, hoặc lùi hạn hay hạ đích mục tiêu.';
+  }
   return 'Chi cố định ' + formatPercent(essentialRatio) + ' thu nhập, còn dư địa. Cắt bớt chi linh hoạt là cách nhanh nhất.';
 }
 
@@ -81,7 +87,10 @@ function computeBudgetMetrics(budgetRows, info) {
   var canGui = info.goals.filter(function (g) { return g.trang_thai === 'dang'; })
     .reduce(function (s, g) { return s + (plannedMonthlyVnd(g) || 0); }, 0);
   var essentialRatio = thu > 0 ? fixed / thu : 0;
-  var tangThu = thu <= 0 || essentialRatio > ESSENTIAL_RATIO_MAX || savingsRate < MIN_SAVINGS_RATE;
+  var thieu = Math.max(0, canGui - Math.max(du, 0));
+  var cutMax = sumMonthly(rows, 'chi_bien_doi') * CUT_VARIABLE_RATIO;
+  // Cutting can only free a slice of variable spending; a bigger shortfall needs more income or a smaller goal.
+  var tangThu = thu <= 0 || essentialRatio > ESSENTIAL_RATIO_MAX || savingsRate < MIN_SAVINGS_RATE || thieu > cutMax;
   return {
     rows: rows.map(function (r) {
       return { budget_id: r.budget_id, loai: r.loai, ten: r.ten, so_tien: toNumberOrZero(r.so_tien), chu_ky: r.chu_ky || 'thang',
@@ -91,8 +100,8 @@ function computeBudgetMetrics(budgetRows, info) {
       thu_thang: Math.round(thu), chi_thang: Math.round(chi), tra_no_toi_thieu: Math.round(debtMin), du_thang: Math.round(du),
       ty_le_tiet_kiem: roundTo(savingsRate, 3),
       quy_khan_cap_thang: chi > 0 ? roundTo(info.liquid / chi, 1) : null,
-      can_gui: Math.round(canGui), kha_thi: canGui <= Math.max(du, 0), thieu: Math.round(Math.max(0, canGui - Math.max(du, 0))),
-      huong: tangThu ? 'tang_thu' : 'cat_chi', ly_do: directionReason(thu, essentialRatio, savingsRate)
+      can_gui: Math.round(canGui), kha_thi: canGui <= Math.max(du, 0), thieu: Math.round(thieu),
+      huong: tangThu ? 'tang_thu' : 'cat_chi', ly_do: directionReason(thu, essentialRatio, savingsRate, thieu, cutMax)
     },
     levers: buildLevers(rows, info.goals, info.config, info.tyGia)
   };

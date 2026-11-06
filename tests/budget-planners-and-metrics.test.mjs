@@ -98,6 +98,22 @@ test('direction: raise income when essentials > 75% of income or saving < 10%, e
   assert.equal(gs.buildDashboardPayload(lowSaving, TODAY).budget.metrics.huong, 'tang_thu');
 });
 
+test('direction: a shortfall bigger than a 20% cut of variable spending also means raise income', () => {
+  const planned = household();
+  planned.goals[0].phuong_an_chon = 'tang_truong';
+  planned.planRows.push({ goal_id: 'G001', phuong_an: 'tang_truong', gui_hang_thang: 20000000, phan_bo_json: '[]' });
+  const m = gs.buildDashboardPayload(planned, TODAY).budget.metrics;
+  assert.equal(m.huong, 'tang_thu');
+  assert.match(m.ly_do, /tăng thu nhập/);
+});
+
+test('levers: raising income by 1, 2 and 5 million is offered next to the cuts', () => {
+  const levers = plain(gs.buildDashboardPayload(household(), TODAY).budget.levers);
+  const five = levers.find((l) => l.ten === 'Tăng thu nhập +5 triệu/tháng, gửi hết phần tăng');
+  assert.equal(five.tiet_kiem_thang, 5000000);
+  assert.ok(five.som_hon_thang > levers.find((l) => l.ten === 'Giảm 20% Ăn uống').som_hon_thang);
+});
+
 test('levers: -20% on each variable line and early payoff of debts above 15%/year only', () => {
   const levers = plain(gs.buildDashboardPayload(household(), TODAY).budget.levers);
   const food = levers.find((l) => l.ten === 'Giảm 20% Ăn uống');
