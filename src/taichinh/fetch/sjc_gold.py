@@ -65,19 +65,41 @@ def parse_sjc_latest(raw: dict, fetched_at: str | None = None) -> pd.DataFrame:
     return _rows_to_df(rows, fetched_at)
 
 
+def _history_window(pid: int, lo: date, hi: date) -> dict:
+    body = {
+        "method": "GetGoldPriceHistory",
+        "goldPriceId": pid,
+        "fromDate": lo.strftime("%d/%m/%Y"),
+        "toDate": hi.strftime("%d/%m/%Y"),
+    }
+    raw = http_client.post_form(URL, body, SPACING)
+    if not raw.get("success"):
+        raise RuntimeError(f"SJC history rejected: {raw.get('message') or raw.get('msg')}")
+    return raw
+
+
 def fetch_sjc(start: date, end: date) -> pd.DataFrame:
-    frames = [parse_sjc_latest(http_client.post_form(URL, {"method": "GetGoldPrice"}, SPACING))]
+    """Latest board + history windows. A failing request does not discard what was already
+    fetched: the first error message is kept in `df.attrs["error"]` (None if all succeeded)."""
+    frames: list[pd.DataFrame] = []
+    errors: list[str] = []
+
+    def attempt(fn, *args) -> None:
+        try:
+            frames.append(fn(*args))
+        except Exception as e:  # noqa: BLE001 - partial results are kept
+            errors.append(f"{type(e).__name__}: {e}")
+
+    def latest() -> pd.DataFrame:
+        return parse_sjc_latest(http_client.post_form(URL, {"method": "GetGoldPrice"}, SPACING))
+
+    attempt(latest)
     for product, pid in PRODUCT_IDS.items():
         for lo, hi in windows(start, end, WINDOW_DAYS):
-            body = {
-                "method": "GetGoldPriceHistory",
-                "goldPriceId": pid,
-                "fromDate": lo.strftime("%d/%m/%Y"),
-                "toDate": hi.strftime("%d/%m/%Y"),
-            }
-            raw = http_client.post_form(URL, body, SPACING)
-            if not raw.get("success"):
-                raise RuntimeError(f"SJC history rejected: {raw.get('message') or raw.get('msg')}")
-            frames.append(parse_sjc_history(raw, product))
+            attempt(lambda p=pid, a=lo, b=hi, n=product: parse_sjc_history(
+                _history_window(p, a, b), n))
     frames = [f for f in frames if not f.empty]
-    return pd.concat(frames, ignore_index=True) if frames else _empty()
+    df = pd.concat(frames, ignore_index=True) if frames else _empty()
+    df = df.drop_duplicates(["date", "product"], keep="last").reset_index(drop=True)
+    df.attrs["error"] = errors[0] if errors else None
+    return df

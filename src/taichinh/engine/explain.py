@@ -10,14 +10,14 @@ ASSET_VI = {
 }
 
 _BINDING_VI = {
-    "horizon": "thời hạn mục tiêu còn ngắn",
+    "horizon": "quy tắc theo thời hạn của mục tiêu",
     "drawdown": "mức sụt giảm tối đa anh chấp nhận",
     "var": "mức lỗ tối đa trong một năm xấu",
     "tolerance": "khẩu vị rủi ro của anh",
     "capacity": "khả năng tài chính hiện tại",
 }
 _VERDICT_VI = {
-    "on_track": "Kế hoạch này nằm trong khả năng của bạn.",
+    "on_track": "Kế hoạch này nằm trong khả năng của anh.",
     "stretch": "Kế hoạch này đòi hỏi anh tiết kiệm sát giới hạn.",
     "income_first": "Anh cần tăng thu nhập hoặc giảm chi tiêu trước khi đầu tư.",
     "build_emergency": "Anh cần lập quỹ khẩn cấp ít nhất ba tháng chi tiêu trước.",

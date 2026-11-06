@@ -10,15 +10,11 @@ from taichinh.engine.types import (
     EquityCaps,
     RiskProfile,
 )
-from taichinh.settings import load_yaml
 
 
-def _default_table() -> list[list[float]]:
-    return load_yaml("profiles.yml")["horizon_caps"]
-
-
-def cap_horizon(months: float, table: list[list[float]] | None = None) -> float:
-    for upper, cap in table if table is not None else _default_table():
+def cap_horizon(months: float, table: list[list[float]]) -> float:
+    """Equity cap from a [[max_months, cap], ...] table (loaded via cma.load_horizon_table)."""
+    for upper, cap in table:
         if months <= upper:
             return float(cap)
     return float(table[-1][1] if table else 1.0)
@@ -94,6 +90,8 @@ def equity_cap(
     profile: RiskProfile,
     cma: CapitalMarketAssumptions,
     budget_metrics: BudgetMetrics | None = None,
+    *,
+    horizon_table: list[list[float]],
 ) -> EquityCaps:
     risky, safe = sleeves(cma)
     mu_r, sig_r, dd_r = _sleeve_stats(cma, risky)
@@ -106,7 +104,7 @@ def equity_cap(
     else:
         rho = 0.0
     caps = {
-        "horizon": cap_horizon(horizon_months),
+        "horizon": cap_horizon(horizon_months, horizon_table),
         "drawdown": cap_drawdown(profile.max_drawdown, dd_r, dd_s),
         "var": cap_var(profile.var_limit, mu_r, sig_r, mu_s, sig_s, rho),
         "tolerance": profile.max_equity,

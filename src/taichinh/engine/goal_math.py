@@ -48,9 +48,10 @@ def months_to_goal(goal_amount: float, pv: float, pmt: float, annual_rate: float
     if abs(r) < _EPS:
         return (goal_amount - pv) / pmt if pmt > 0 else None
     num, den = goal_amount * r + pmt, pv * r + pmt
-    if num <= 0 or den <= 0 or num <= den:
+    if abs(den) < _EPS or num / den <= 0:
         return None
-    return math.log(num / den) / math.log(1.0 + r)
+    n = math.log(num / den) / math.log(1.0 + r)  # valid for r < 0 too (both logs negative)
+    return n if n > 0 else None
 
 
 def inflate_target(g0: float, inflation: float, n_months: int) -> float:

@@ -82,35 +82,41 @@ def blend_with_history(
     full_window: int = 120,
     min_window: int = 24,
 ) -> CapitalMarketAssumptions:
-    """Blend prior sigma/corr with history (Ledoit-Wolf); mu stays at the prior."""
-    from taichinh.engine.covariance import ledoit_wolf_cov
+    """Blend prior sigma/corr with history; mu stays at the prior.
 
+    Each asset's sigma comes from its own non-NaN window and each correlation from the pairwise
+    overlap of the two series (never a joint dropna), so a short-lived asset cannot shrink the
+    sample of the others. Weight on history = clip((n - min_window) / (full - min_window), 0, 1)
+    with n = own window (sigma) or pairwise overlap (corr). The blended matrix is PSD-repaired.
+    """
     ids = prior.asset_ids
     hist = monthly_returns.tail(full_window)
     counts = {a: int(hist[a].notna().sum()) if a in hist.columns else 0 for a in ids}
-    use = [a for a in ids if counts[a] > min_window]
     assets = {a: replace(prior.assets[a], history_months=counts[a]) for a in ids}
-    if len(use) < 1:
+    use = [a for a in ids if counts[a] > min_window]
+    if not use:
         return replace(prior, assets=assets)
-    sub = hist[use].dropna()
-    if len(sub) < 3:
-        return replace(prior, assets=assets)
-    cov_m, _ = ledoit_wolf_cov(sub.to_numpy())
-    cov_a = np.asarray(cov_m, float) * 12.0
-    s_h = np.sqrt(np.diag(cov_a))
-    c_h = cov_a / np.outer(s_h, s_h)
     span = max(full_window - min_window, 1)
-    lam = {a: float(np.clip((counts[a] - min_window) / span, 0.0, 1.0)) for a in ids}
-    corr = prior.corr.copy()
-    pos = {a: i for i, a in enumerate(use)}
-    for i, a in enumerate(ids):
-        for j, b in enumerate(ids):
-            if i != j and a in pos and b in pos:
-                lp = float(np.clip((min(counts[a], counts[b]) - min_window) / span, 0.0, 1.0))
-                corr[i, j] = lp * c_h[pos[a], pos[b]] + (1 - lp) * prior.corr[i, j]
+
+    def weight(n: int) -> float:
+        return float(np.clip((n - min_window) / span, 0.0, 1.0))
+
     for a in use:
-        sig = lam[a] * s_h[pos[a]] + (1 - lam[a]) * prior.assets[a].sigma
-        assets[a] = replace(assets[a], sigma=float(sig))
+        s_h = float(hist[a].dropna().std(ddof=1)) * np.sqrt(12.0)
+        lam = weight(counts[a])
+        assets[a] = replace(assets[a], sigma=float(lam * s_h + (1 - lam) * prior.assets[a].sigma))
+    corr = prior.corr.copy()
+    for i, a in enumerate(ids):
+        for j in range(i + 1, len(ids)):
+            b = ids[j]
+            if a not in use or b not in use:
+                continue
+            pair = hist[[a, b]].dropna()
+            if len(pair) <= min_window:
+                continue
+            c_h = float(np.nan_to_num(pair[a].corr(pair[b])))
+            lp = weight(len(pair))
+            corr[i, j] = corr[j, i] = lp * c_h + (1 - lp) * prior.corr[i, j]
     return replace(prior, assets=assets, corr=_psd_corr(corr))
 
 
@@ -144,3 +150,7 @@ def load_profiles() -> dict[str, RiskProfile]:
 
 def load_thresholds() -> dict:
     return dict(load_yaml("profiles.yml")["budget_thresholds"])
+
+
+def load_horizon_table() -> list[list[float]]:
+    return [list(row) for row in load_yaml("profiles.yml")["horizon_caps"]]

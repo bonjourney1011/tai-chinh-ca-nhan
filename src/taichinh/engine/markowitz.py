@@ -76,11 +76,11 @@ def max_sharpe_vol_cap(
     inputs: MarketInputs,
     cap: float,
     mvp: PortfolioStats | None = None,
-    tangency: PortfolioStats | None = None,  # noqa: F811 - mirrors the TS parameter name
+    tangency_pf: PortfolioStats | None = None,  # precomputed tangency (mirrors the TS param)
 ) -> tuple[PortfolioStats | None, CapStatus]:
     """Max-Sharpe stock-only portfolio with sigma <= cap (bisection along the frontier)."""
     mvp = mvp or minimum_variance(inputs)
-    tg = tangency if tangency is not None else _tangency(inputs)
+    tg = tangency_pf if tangency_pf is not None else tangency(inputs)
     if mvp.volatility > cap * (1 + 1e-9):
         return None, "infeasible"
     if tg is not None:
@@ -102,7 +102,6 @@ def max_sharpe_vol_cap(
     return best, "all-below-risk-free"
 
 
-_tangency = tangency
 
 
 def risk_free_mix(tg: PortfolioStats | None, rf: float, cap: float, n: int) -> PortfolioStats:

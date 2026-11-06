@@ -20,11 +20,21 @@ DEFAULT_LOOKBACK_DAYS = 30
 
 
 def fetch_gold(start: date, end: date) -> pd.DataFrame:
-    """SJC first; BTMC board (current quote only) if SJC fails."""
+    """SJC first (partial results kept); BTMC board (current quote only) if SJC yields nothing.
+    The SJC error always stays visible in `df.attrs["error"]`, even when BTMC succeeded."""
+    err: str | None = None
+    df = pd.DataFrame()
     try:
-        return fetch_sjc(start, end)
-    except Exception:
-        return fetch_btmc(start, end)
+        df = fetch_sjc(start, end)
+        err = df.attrs.get("error")
+    except Exception as e:  # noqa: BLE001
+        err = f"{type(e).__name__}: {e}"
+    if len(df):
+        df.attrs["error"] = err
+        return df
+    df = fetch_btmc(start, end)
+    df.attrs["error"], df.attrs["fallback"] = err, "btmc"
+    return df
 
 
 # source -> (fetch(start, end) -> DataFrame, target schema)
@@ -51,7 +61,12 @@ def run_fetch(
             df = FETCHERS[name](start, end)
             upsert(df, SCHEMAS[name])
             latest = str(df["date"].max()) if len(df) else None
-            result[name] = {"ok": True, "rows": int(len(df)), "latest": latest, "error": None}
+            result[name] = {
+                "ok": True, "rows": int(len(df)), "latest": latest,
+                "error": df.attrs.get("error"),
+            }
+            if df.attrs.get("fallback"):
+                result[name]["fallback"] = df.attrs["fallback"]
         except Exception as e:  # noqa: BLE001 - status file is the error channel
             err = f"{type(e).__name__}: {e}"
             result[name] = {"ok": False, "rows": 0, "latest": None, "error": err}

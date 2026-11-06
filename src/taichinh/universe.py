@@ -10,6 +10,7 @@ from taichinh.store.loaders import load_close_series
 
 CORE_CMA = ("deposit_12m", "bond_fund", "etf_vn30", "gold_sjc")
 FOREIGN_CMA = ("us_etf", "btc")
+FFILL_DAYS = 45
 
 
 def load_assets_cfg() -> dict:
@@ -60,8 +61,16 @@ def monthly_returns_by_cma_key(cma_keys: list[str], assets_cfg: dict | None = No
     if not ids:
         return pd.DataFrame()
     closes = load_close_series(ids, {"assets": catalog(cfg)}).dropna(how="all")
+    raw_attrs = dict(closes.attrs)
     if closes.empty:
         return pd.DataFrame()
     closes.index = pd.to_datetime(closes.index)
+    # Sparse quotes (SJC stores change days only): carry the last price over gaps of up to
+    # FFILL_DAYS calendar days so a quiet month still has a month-end close.
+    full = pd.date_range(closes.index.min(), closes.index.max(), freq="D")
+    closes = closes.reindex(full).ffill(limit=FFILL_DAYS)
     inverse = {v: k for k, v in mapping.items()}
-    return to_monthly(closes).rename(columns=inverse).dropna(axis=1, how="all")
+    out = to_monthly(closes).rename(columns=inverse).dropna(axis=1, how="all")
+    if "fx_history_days" in raw_attrs:
+        out.attrs["fx_history_days"] = raw_attrs["fx_history_days"]
+    return out

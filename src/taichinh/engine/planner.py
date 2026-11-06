@@ -8,6 +8,7 @@ from datetime import date
 import numpy as np
 
 from taichinh.engine.allocation_rules import equity_cap
+from taichinh.engine.cma import load_horizon_table
 from taichinh.engine.explain import explain_caps, explain_mix, pct, trieu
 from taichinh.engine.goal_math import (
     future_value,
@@ -41,11 +42,17 @@ def _horizon(goal: Goal, today: date) -> int:
 
 
 def _target(goal: Goal, n: int, cma: CapitalMarketAssumptions, fx_spot: float | None) -> float:
+    """Nominal VND target at the deadline.
+
+    USD goal: converted at the drifted future spot (fx_drift only); VND CPI is NOT applied on
+    top, since a USD price does not inflate with VND CPI. VND goal: inflated by VND CPI only
+    when goal.inflation_adjust is set.
+    """
     g = goal.target_amount
     if goal.currency == "USD":
         if not fx_spot:
             raise ValueError("fx_spot required for USD goal")
-        g = fx_adjusted_target(g, fx_spot, goal.fx_drift, n)
+        return fx_adjusted_target(g, fx_spot, goal.fx_drift, n)
     if goal.inflation_adjust:
         g = inflate_target(g, cma.inflation, n)
     return g
@@ -71,11 +78,13 @@ def plan_goal(
     seed: int = 0,
     n_paths: int = 20000,
     today: date | None = None,
+    horizon_table: list[list[float]] | None = None,
 ) -> GoalPlan:
     n = _horizon(goal, today or date.today())
     g = _target(goal, n, cma, fx_spot)
     pv, lumps = goal.current_pv, goal.annual_lumps or None
-    caps = equity_cap(n, profile, cma, budget_metrics)
+    table = horizon_table if horizon_table is not None else load_horizon_table()
+    caps = equity_cap(n, profile, cma, budget_metrics, horizon_table=table)
     warnings: list[str] = []
 
     if pv >= g:
@@ -155,7 +164,7 @@ def plan_goals_sequential(
         )
         if give < goal.target_amount - goal.current_pv and left <= 0:
             plan.warnings.append(
-                "Vốn ban đầu không đủ cho mục tiêu này; bạn dựa vào tiền gửi hàng tháng."
+                "Vốn ban đầu không đủ cho mục tiêu này; anh dựa vào tiền gửi hàng tháng."
             )
         plans.append(plan)
     return plans

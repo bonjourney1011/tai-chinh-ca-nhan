@@ -16,7 +16,7 @@ DEFAULT_SPACING = 1.0  # seconds between requests to the same host
 _session = requests.Session()
 _session.headers.update({"User-Agent": USER_AGENT})
 _last_hit: dict[str, float] = {}
-_robots: dict[str, urllib.robotparser.RobotFileParser | None] = {}
+_robots: dict[str, object | None] = {}
 
 
 class RobotsDisallowed(RuntimeError):
@@ -31,20 +31,32 @@ def min_interval(host: str, seconds: float) -> None:
     _last_hit[host] = time.monotonic()
 
 
+class _DisallowAll:
+    @staticmethod
+    def can_fetch(_agent: str, _url: str) -> bool:
+        return False
+
+
 def robots_allows(url: str) -> bool:
-    """True unless the host's robots.txt Disallows this path for `*` (missing file = allowed)."""
+    """RFC 9309: robots.txt 2xx -> follow its rules; 4xx (missing) -> allowed; 5xx or
+    unreachable -> disallowed (cached for the session)."""
     parts = urlparse(url)
     host = f"{parts.scheme}://{parts.netloc}"
     if host not in _robots:
-        rp: urllib.robotparser.RobotFileParser | None = None
+        rp = _DisallowAll()
         try:
             min_interval(parts.netloc, DEFAULT_SPACING)
             r = _session.get(f"{host}/robots.txt", timeout=TIMEOUT)
-            if r.status_code == 200 and "html" not in r.headers.get("content-type", "").lower():
-                rp = urllib.robotparser.RobotFileParser()
-                rp.parse(r.text.splitlines())
+            if 400 <= r.status_code < 500:
+                rp = None
+            elif r.status_code == 200:
+                if "html" in r.headers.get("content-type", "").lower():
+                    rp = None  # SPA catch-all page, not a robots file
+                else:
+                    rp = urllib.robotparser.RobotFileParser()
+                    rp.parse(r.text.splitlines())
         except requests.RequestException:
-            rp = None
+            pass
         _robots[host] = rp
     rp = _robots[host]
     return True if rp is None else rp.can_fetch("*", url)
@@ -61,10 +73,16 @@ def _request(method: str, url: str, spacing: float, **kw) -> requests.Response:
             r = _session.request(method, url, timeout=TIMEOUT, **kw)
             if r.status_code >= 500 or r.status_code == 429:
                 raise requests.HTTPError(f"HTTP {r.status_code}", response=r)
-            r.raise_for_status()
+            r.raise_for_status()  # other 4xx: client error, not retried
             return r
+        except requests.HTTPError as e:
+            last = e
+            code = e.response.status_code if e.response is not None else 0
+            if 400 <= code < 500 and code != 429:
+                raise RuntimeError(f"HTTP {code}: {url}") from e
         except requests.RequestException as e:
             last = e
+        if attempt < RETRIES - 1:
             time.sleep(2 ** (attempt + 1))
     raise RuntimeError(f"request failed after {RETRIES} tries: {url}: {last}")
 

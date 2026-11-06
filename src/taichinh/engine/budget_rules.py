@@ -99,7 +99,8 @@ def rank_levers(
 
 
 def _simulate(debts: list[Debt], extra: float, strategy: str) -> DebtPlan:
-    """Monthly amortisation (rate_pa/12); freed minimums roll into the target debt."""
+    """Monthly amortisation (loan APR convention: rate_pa/12, not the geometric 12th root used
+    for investment returns); freed minimums roll into the target debt."""
     bal = {d.name: d.balance for d in debts}
     rate = {d.name: d.rate_pa / 12.0 for d in debts}
     budget = sum(d.min_payment for d in debts) + extra
@@ -142,12 +143,13 @@ def diagnose(
     pv: float,
     annual_rate: float,
     months_to_deadline: float,
+    thresholds: dict,
 ) -> BudgetDiagnosis:
-    from taichinh.engine.cma import load_thresholds
+    """`thresholds` comes from cma.load_thresholds() (config is read at the call site)."""
     from taichinh.engine.explain import explain_verdict
 
     m = budget_metrics(b, pmt_required)
-    v = verdict(m, months_to_deadline, load_thresholds())
+    v = verdict(m, months_to_deadline, thresholds)
     levers = rank_levers(goal_amount, pv, annual_rate, b, max(m.disposable, 0.0))
     ava = sno = None
     if b.debts:

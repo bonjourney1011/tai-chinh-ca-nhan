@@ -58,5 +58,5 @@ def test_debt_avalanche_not_worse():
 
 def test_diagnose():
     b = BudgetInputs(20e6, 8e6, 4e6, 40e6)
-    d = br.diagnose(b, 2e6, 200e6, 10e6, 0.07, 36)
+    d = br.diagnose(b, 2e6, 200e6, 10e6, 0.07, 36, TH)
     assert d.verdict == "on_track" and d.debt_avalanche is None and d.explanations

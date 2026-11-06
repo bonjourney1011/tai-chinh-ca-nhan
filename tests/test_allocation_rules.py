@@ -2,14 +2,17 @@ import pytest
 
 from taichinh.engine import allocation_rules as ar
 from taichinh.engine.budget_rules import budget_metrics
-from taichinh.engine.cma import load_cma, load_profiles
+from taichinh.engine.cma import load_cma, load_horizon_table, load_profiles
 from taichinh.engine.types import BudgetInputs
+
+HT = load_horizon_table()
 
 
 def test_cap_horizon_monotone_and_values():
-    vals = [ar.cap_horizon(m) for m in (6, 12, 24, 36, 48, 60, 120)]
+    vals = [ar.cap_horizon(m, HT) for m in (6, 12, 24, 36, 48, 60, 120)]
     assert vals == sorted(vals)
-    assert ar.cap_horizon(36) == 0.2 and ar.cap_horizon(12) == 0.0 and ar.cap_horizon(500) == 0.7
+    assert ar.cap_horizon(36, HT) == 0.2 and ar.cap_horizon(12, HT) == 0.0
+    assert ar.cap_horizon(500, HT) == 0.7
 
 
 def test_cap_drawdown():
@@ -37,9 +40,9 @@ def test_cap_capacity():
 
 def test_equity_cap_binding():
     cma = load_cma()
-    c = ar.equity_cap(36, load_profiles()["can_bang"], cma)
+    c = ar.equity_cap(36, load_profiles()["can_bang"], cma, horizon_table=HT)
     assert c.w_eq == min(c.horizon, c.drawdown, c.var, c.tolerance, c.capacity) == 0.2
     assert c.binding == "horizon"
-    assert ar.equity_cap(6, load_profiles()["can_bang"], cma).w_eq == 0.0
+    assert ar.equity_cap(6, load_profiles()["can_bang"], cma, horizon_table=HT).w_eq == 0.0
     risky, safe = ar.sleeves(cma)
     assert "etf_vn30" in risky and "deposit_12m" in safe

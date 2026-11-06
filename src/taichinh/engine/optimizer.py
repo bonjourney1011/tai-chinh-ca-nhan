@@ -9,10 +9,29 @@ from taichinh.engine.allocation_rules import sleeves
 from taichinh.engine.types import CapitalMarketAssumptions, Mix, RiskProfile
 
 
+def project_to_boxes(w: np.ndarray, lo: np.ndarray, hi: np.ndarray) -> np.ndarray:
+    """Euclidean projection of w onto {sum = 1, lo <= x <= hi}: x = clip(w - tau, lo, hi) with
+    tau found by bisection (sum is monotone in tau). Exact, so boxes are never violated by a
+    renormalisation. If the boxes cannot sum to 1 the closest feasible end is returned."""
+    w = np.asarray(w, float)
+    if len(w) == 0:
+        return w
+    if lo.sum() >= 1.0:
+        return lo.copy()
+    if hi.sum() <= 1.0:
+        return hi.copy()
+    a, b = float((w - hi).min()) - 1.0, float((w - lo).max()) + 1.0
+    for _ in range(100):
+        tau = 0.5 * (a + b)
+        if np.clip(w - tau, lo, hi).sum() > 1.0:
+            a = tau
+        else:
+            b = tau
+    return np.clip(w - 0.5 * (a + b), lo, hi)
+
+
 def _start(lo: np.ndarray, hi: np.ndarray) -> np.ndarray:
-    n = len(lo)
-    w = np.clip(np.full(n, 1.0 / n), lo, hi)
-    return w / w.sum()
+    return project_to_boxes(np.full(len(lo), 1.0 / max(len(lo), 1)), lo, hi)
 
 
 def _solve(fun, jac, cov, lo, hi, x0):
@@ -24,8 +43,7 @@ def _solve(fun, jac, cov, lo, hi, x0):
         constraints=[{"type": "eq", "fun": lambda w: w.sum() - 1.0, "jac": lambda w: np.ones(n)}],
         options={"maxiter": 500, "ftol": 1e-14},
     )
-    w = np.clip(res.x, lo, hi)
-    return w / w.sum()
+    return project_to_boxes(res.x, lo, hi)
 
 
 def min_variance_boxed(cov: np.ndarray, lo: np.ndarray, hi: np.ndarray) -> np.ndarray:
@@ -43,8 +61,7 @@ def risk_contributions(w: np.ndarray, cov: np.ndarray) -> np.ndarray:
 def equal_risk_contribution(cov: np.ndarray, lo: np.ndarray, hi: np.ndarray) -> np.ndarray:
     n = len(lo)
     inv = 1.0 / np.sqrt(np.diag(cov).clip(1e-12))
-    x0 = np.clip(inv / inv.sum(), lo, hi)
-    x0 = x0 / x0.sum()
+    x0 = project_to_boxes(inv / inv.sum(), lo, hi)
     target = np.full(n, 1.0 / n)
     return _solve(
         lambda w: float(np.sum((1e3 * (risk_contributions(w, cov) - target)) ** 2)),
@@ -119,5 +136,6 @@ def candidate_mixes(w_eq: float, cma: CapitalMarketAssumptions, profile: RiskPro
             rw = np.clip(np.asarray(t.weights, float), 0.0, None)
             if rw.sum() > 1e-9:
                 sw = min_variance_boxed(s_cov, s_lo, s_hi) if safe else empty
-                mixes.append(mk("classic_tangency", "Markowitz tiếp tuyến", rw / rw.sum(), sw))
+                rw = project_to_boxes(rw / rw.sum(), r_lo, r_hi)
+                mixes.append(mk("classic_tangency", "Markowitz tiếp tuyến", rw, sw))
     return mixes

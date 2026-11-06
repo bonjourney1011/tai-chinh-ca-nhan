@@ -61,17 +61,26 @@ def load_close_series(
     stocks, gold = load_csv(STOCKS_DAILY, data_dir), load_csv(GOLD_DAILY, data_dir)
     fx_usd, global_px = _fx_usd(data_dir), _load_global(data_dir)
     cols = {}
+    usd_used = False
     for aid in asset_ids:
         a = by_id[aid]
         s = _asset_series(a, stocks, gold, fx_usd, global_px)
         if s is None or s.empty:
             continue
         if a.get("tien_te") == "USD":
-            rate = fx_usd.reindex(fx_usd.index.union(s.index)).ffill().bfill()
+            # ffill only; dates before the first FX quote use that first quote (approximation,
+            # flagged through attrs["fx_history_days"] so callers can warn).
+            rate = fx_usd.reindex(fx_usd.index.union(s.index)).ffill()
+            rate = rate.fillna(fx_usd.iloc[0] if len(fx_usd) else float("nan"))
             s = s * rate.reindex(s.index)
+            usd_used = True
         cols[aid] = s
     out = pd.DataFrame(cols)
     out.index.name = "date"
+    if usd_used:
+        first, last = (fx_usd.index[0], fx_usd.index[-1]) if len(fx_usd) else (None, None)
+        span = (pd.Timestamp(last) - pd.Timestamp(first)).days if first else 0
+        out.attrs["fx_history_days"] = int(span)
     return out.sort_index()
 
 

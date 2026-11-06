@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from datetime import date
+
 import numpy as np
 import pandas as pd
 
@@ -34,9 +36,12 @@ def log_returns(closes: np.ndarray) -> np.ndarray:
     return np.log(c[..., 1:] / c[..., :-1])
 
 
-def to_monthly(prices: pd.DataFrame) -> pd.DataFrame:
-    """Daily prices (DatetimeIndex) -> month-end last close -> monthly simple returns."""
-    return prices.resample("ME").last().pct_change(fill_method=None).dropna(how="all")
+def to_monthly(prices: pd.DataFrame, today: date | None = None) -> pd.DataFrame:
+    """Daily prices (DatetimeIndex) -> month-end last close -> monthly simple returns.
+    Only completed months are used: a month whose end is after `today` is dropped."""
+    closes = prices.resample("ME").last()
+    closes = closes[closes.index <= pd.Timestamp(today or date.today())]
+    return closes.pct_change(fill_method=None).dropna(how="all")
 
 
 def annualize_mean(r: np.ndarray, periods: int = TRADING_DAYS) -> np.ndarray:
