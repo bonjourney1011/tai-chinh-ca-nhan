@@ -82,6 +82,16 @@ assets:
     lot_size: 0.0001
     source: kraken
     symbol: XBTUSD
+  - asset_id: BNB
+    ten: BNB (Binance Coin)
+    nhom: usd
+    tien_te: USD
+    loai_gia: gia
+    nhap_tay: false
+    cma_key: crypto_alt
+    lot_size: 0.001
+    source: kraken
+    symbol: BNBUSD
 
 # User-chosen single VN stocks (≤ 20). Each uses cma_key stock_default unless overridden.
 user_stocks: []

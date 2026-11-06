@@ -75,3 +75,19 @@ def test_vcb_usd_only():
     r = df.iloc[0]
     assert (r["ccy"], r["buy_transfer"], r["sell"], r["date"]) == (
         "USD", 25420.0, 25800.0, "2026-11-06")
+
+
+def test_kraken_bnb_close_usd_and_columns():
+    from taichinh.fetch.kraken_crypto import parse_kraken
+    from taichinh.store.schemas import GLOBAL_DAILY
+
+    df = parse_kraken(_json("kraken-ohlc-bnbusd.json"), "BNBUSD", TS)
+    assert list(df.columns) == list(GLOBAL_DAILY.columns)
+    assert not df.duplicated(list(GLOBAL_DAILY.keys)).any()
+    assert df.iloc[0]["date"] == "2026-11-01" and df.iloc[0]["close_usd"] == 711.82
+    assert set(df["symbol"]) == {"BNBUSD"} and set(df["source"]) == {"kraken"}
+    assert parse_kraken({"error": ["EQuery:Unknown asset pair"]}, "BNBUSD", TS).empty
+    # Kraken's internal name maps back to the configured symbol
+    candle = [1793923200, "1", "1", "1", "100000.5", "1", "1", 1]
+    raw = {"error": [], "result": {"XXBTZUSD": [candle]}}
+    assert parse_kraken(raw, "XBTUSD", TS).iloc[0]["close_usd"] == 100000.5

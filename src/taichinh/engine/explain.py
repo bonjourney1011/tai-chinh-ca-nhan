@@ -6,7 +6,7 @@ from taichinh.engine.types import BudgetDiagnosis, EquityCaps, Mix
 
 ASSET_VI = {
     "deposit_12m": "tiền gửi 12 tháng", "bond_fund": "quỹ trái phiếu", "etf_vn30": "ETF VN30",
-    "gold_sjc": "vàng SJC", "us_etf": "ETF Mỹ", "btc": "Bitcoin",
+    "gold_sjc": "vàng SJC", "us_etf": "ETF Mỹ", "btc": "Bitcoin", "crypto_alt": "BNB",
 }
 
 _BINDING_VI = {

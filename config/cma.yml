@@ -74,6 +74,18 @@ assets:
     currency: USD
     liquidity_days: 1
     fx_drift: 0.02
+  crypto_alt:
+    sleeve: risky
+    mu_low: -0.30
+    mu_base: 0.10
+    mu_high: 0.40
+    sigma: 0.80
+    max_drawdown: -0.85
+    min_weight: 0.0
+    max_weight: 0.05
+    currency: USD
+    liquidity_days: 1
+    fx_drift: 0.02
   stock_default:
     sleeve: risky
     mu_low: 0.04
@@ -88,8 +100,9 @@ assets:
 benchmark: vnindex
 # symmetric; only upper triangle listed; missing pairs = 0
 prior_correlation:
-  etf_vn30: { gold_sjc: 0.10, bond_fund: 0.20, us_etf: 0.40, btc: 0.20, deposit_12m: 0.0, stock_default: 0.70 }
-  gold_sjc: { us_etf: 0.05, btc: 0.10, bond_fund: 0.05, stock_default: 0.10 }
-  us_etf: { btc: 0.35, bond_fund: 0.10, stock_default: 0.30 }
-  btc: { stock_default: 0.15 }
+  etf_vn30: { gold_sjc: 0.10, bond_fund: 0.20, us_etf: 0.40, btc: 0.20, crypto_alt: 0.20, deposit_12m: 0.0, stock_default: 0.70 }
+  gold_sjc: { us_etf: 0.05, btc: 0.10, crypto_alt: 0.10, bond_fund: 0.05, stock_default: 0.10 }
+  us_etf: { btc: 0.35, crypto_alt: 0.35, bond_fund: 0.10, stock_default: 0.30 }
+  btc: { crypto_alt: 0.75, stock_default: 0.15 }
+  crypto_alt: { stock_default: 0.15 }
   bond_fund: { deposit_12m: 0.3, stock_default: 0.15 }

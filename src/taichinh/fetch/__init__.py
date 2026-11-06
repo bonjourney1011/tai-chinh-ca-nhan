@@ -10,11 +10,12 @@ import pandas as pd
 
 from taichinh import settings
 from taichinh.fetch.btmc_gold import fetch_btmc
+from taichinh.fetch.kraken_crypto import fetch_crypto
 from taichinh.fetch.sjc_gold import fetch_sjc
 from taichinh.fetch.vietcombank_fx import fetch_vcb
 from taichinh.fetch.vndirect_stocks import fetch_stocks
 from taichinh.store.csv_upsert import upsert
-from taichinh.store.schemas import FX_DAILY, GOLD_DAILY, STOCKS_DAILY, CsvSchema
+from taichinh.store.schemas import FX_DAILY, GLOBAL_DAILY, GOLD_DAILY, STOCKS_DAILY, CsvSchema
 
 DEFAULT_LOOKBACK_DAYS = 30
 
@@ -42,8 +43,11 @@ FETCHERS: dict[str, Callable[[date, date], pd.DataFrame]] = {
     "stocks": fetch_stocks,
     "gold": fetch_gold,
     "fx": fetch_vcb,
+    "crypto": fetch_crypto,
 }
-SCHEMAS: dict[str, CsvSchema] = {"stocks": STOCKS_DAILY, "gold": GOLD_DAILY, "fx": FX_DAILY}
+SCHEMAS: dict[str, CsvSchema] = {
+    "stocks": STOCKS_DAILY, "gold": GOLD_DAILY, "fx": FX_DAILY, "crypto": GLOBAL_DAILY
+}
 
 
 def status_path():

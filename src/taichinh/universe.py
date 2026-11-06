@@ -9,7 +9,7 @@ from taichinh.settings import load_yaml
 from taichinh.store.loaders import load_close_series
 
 CORE_CMA = ("deposit_12m", "bond_fund", "etf_vn30", "gold_sjc")
-FOREIGN_CMA = ("us_etf", "btc")
+FOREIGN_CMA = ("us_etf", "btc", "crypto_alt")
 FFILL_DAYS = 45
 
 

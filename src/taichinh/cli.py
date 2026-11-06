@@ -56,7 +56,7 @@ def _start_date(start: str | None) -> date:
 
 @app.command()
 def fetch(
-    source: str = typer.Option("all", help="stocks,gold,fx or all"),
+    source: str = typer.Option("all", help="stocks,gold,fx,crypto or all"),
     start: str = typer.Option(None, help="YYYY-MM-DD (default: last 60 days)"),
 ) -> None:
     """Fetch market data into data/market CSVs."""
@@ -133,7 +133,7 @@ def push() -> None:
 
 @app.command("run-monthly")
 def run_monthly(
-    sources: str = typer.Option("all", help="stocks,gold,fx or all"),
+    sources: str = typer.Option("all", help="stocks,gold,fx,crypto or all"),
     start: str = typer.Option(None, help="YYYY-MM-DD (default: last 60 days)"),
     push_sheet: bool = typer.Option(True, "--push/--no-push"),
     inputs_json: str = typer.Option(None, help="Fixture JSON thay cho Sheet (để thử cục bộ)"),
