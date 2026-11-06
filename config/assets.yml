@@ -94,7 +94,31 @@ assets:
     symbol: BNBUSD
 
 # User-chosen single VN stocks (≤ 20). Each uses cma_key stock_default unless overridden.
-user_stocks: []
-# example:
-# user_stocks:
-#   - { asset_id: VCB, ten: Vietcombank, symbol: VCB }
+user_stocks:  # nhom_cp: co_tuc_cao | ngan_hang | quan_tam (ghi chú, không ảnh hưởng tính toán)
+  - { asset_id: TNG, ten: "Đầu tư và Thương mại TNG", symbol: TNG, nhom_cp: co_tuc_cao }
+  - { asset_id: SCS, ten: "Dịch vụ Hàng hóa Sài Gòn", symbol: SCS, nhom_cp: co_tuc_cao }
+  - { asset_id: PVP, ten: "Vận tải Dầu khí Thái Bình Dương", symbol: PVP, nhom_cp: co_tuc_cao }
+  - { asset_id: VTO, ten: "Vận tải Xăng dầu Vitaco", symbol: VTO, nhom_cp: co_tuc_cao }
+  - { asset_id: QNS, ten: "Đường Quảng Ngãi", symbol: QNS, nhom_cp: co_tuc_cao }
+  - { asset_id: LHG, ten: "Long Hậu", symbol: LHG, nhom_cp: co_tuc_cao }
+  - { asset_id: DRI, ten: "Cao su Đắk Lắk", symbol: DRI, nhom_cp: co_tuc_cao }
+  - { asset_id: KSV, ten: "Tổng công ty Khoáng sản TKV", symbol: KSV, nhom_cp: co_tuc_cao }
+  - { asset_id: BFC, ten: "Phân bón Bình Điền", symbol: BFC, nhom_cp: co_tuc_cao }
+  - { asset_id: ANV, ten: "Nam Việt", symbol: ANV, nhom_cp: co_tuc_cao }
+  - { asset_id: DCM, ten: "Phân bón Dầu khí Cà Mau", symbol: DCM, nhom_cp: co_tuc_cao }
+  - { asset_id: NTP, ten: "Nhựa Thiếu niên Tiền Phong", symbol: NTP, nhom_cp: co_tuc_cao }
+  - { asset_id: SSI, ten: "Chứng khoán SSI", symbol: SSI, nhom_cp: co_tuc_cao }
+  - { asset_id: PTB, ten: "Phú Tài", symbol: PTB, nhom_cp: co_tuc_cao }
+  - { asset_id: DGW, ten: "Digiworld", symbol: DGW, nhom_cp: co_tuc_cao }
+  - { asset_id: MBB, ten: "Ngân hàng Quân đội (MB)", symbol: MBB, nhom_cp: ngan_hang }
+  - { asset_id: VCB, ten: "Vietcombank", symbol: VCB, nhom_cp: ngan_hang }
+  - { asset_id: TCB, ten: "Techcombank", symbol: TCB, nhom_cp: ngan_hang }
+  - { asset_id: VPB, ten: "VPBank", symbol: VPB, nhom_cp: ngan_hang }
+  - { asset_id: BID, ten: "BIDV", symbol: BID, nhom_cp: ngan_hang }
+  - { asset_id: CTG, ten: "VietinBank", symbol: CTG, nhom_cp: ngan_hang }
+  - { asset_id: VNM, ten: "Vinamilk", symbol: VNM, nhom_cp: quan_tam }
+  - { asset_id: PAN, ten: "Tập đoàn PAN", symbol: PAN, nhom_cp: quan_tam }
+  - { asset_id: SBT, ten: "TTC AgriS (SBT)", symbol: SBT, nhom_cp: quan_tam }
+  - { asset_id: MWG, ten: "Thế Giới Di Động", symbol: MWG, nhom_cp: quan_tam }
+  - { asset_id: FRT, ten: "FPT Retail", symbol: FRT, nhom_cp: quan_tam }
+  - { asset_id: FPT, ten: "FPT", symbol: FPT, nhom_cp: quan_tam }
