@@ -11,17 +11,17 @@ ASSET_VI = {
 
 _BINDING_VI = {
     "horizon": "quy tắc theo thời hạn của mục tiêu",
-    "drawdown": "mức sụt giảm tối đa anh chấp nhận",
+    "drawdown": "mức sụt giảm tối đa Mo chấp nhận",
     "var": "mức lỗ tối đa trong một năm xấu",
-    "tolerance": "khẩu vị rủi ro của anh",
+    "tolerance": "khẩu vị rủi ro của Mo",
     "capacity": "khả năng tài chính hiện tại",
 }
 _VERDICT_VI = {
-    "on_track": "Kế hoạch này nằm trong khả năng của anh.",
-    "stretch": "Kế hoạch này đòi hỏi anh tiết kiệm sát giới hạn.",
-    "income_first": "Anh cần tăng thu nhập hoặc giảm chi tiêu trước khi đầu tư.",
-    "build_emergency": "Anh cần lập quỹ khẩn cấp ít nhất ba tháng chi tiêu trước.",
-    "infeasible": "Với ngân sách hiện tại anh không đạt mục tiêu này đúng hạn.",
+    "on_track": "Kế hoạch này nằm trong khả năng của Mo.",
+    "stretch": "Kế hoạch này đòi hỏi Mo tiết kiệm sát giới hạn.",
+    "income_first": "Mo cần tăng thu nhập hoặc giảm chi tiêu trước khi đầu tư.",
+    "build_emergency": "Mo cần lập quỹ khẩn cấp ít nhất ba tháng chi tiêu trước.",
+    "infeasible": "Với ngân sách hiện tại Mo không đạt mục tiêu này đúng hạn.",
 }
 
 
@@ -37,7 +37,7 @@ def pct(x: float) -> str:
 
 def explain_caps(caps: EquityCaps) -> str:
     why = _BINDING_VI.get(caps.binding, caps.binding)
-    return f"Anh giữ tối đa {pct(caps.w_eq)} vào tài sản rủi ro vì {why}."
+    return f"Mo giữ tối đa {pct(caps.w_eq)} vào tài sản rủi ro vì {why}."
 
 
 def explain_mix(mix: Mix, p_success: float, pmt: float) -> str:
@@ -45,7 +45,7 @@ def explain_mix(mix: Mix, p_success: float, pmt: float) -> str:
     names = ", ".join(f"{ASSET_VI.get(k, k)} {pct(v)}" for k, v in top if v > 0.005)
     return (
         f"Danh mục {mix.name} gồm {names}. "
-        f"Anh gửi {trieu(pmt)} mỗi tháng và đạt mục tiêu với xác suất {pct(p_success)}."
+        f"Mo gửi {trieu(pmt)} mỗi tháng và đạt mục tiêu với xác suất {pct(p_success)}."
     )
 
 
@@ -53,7 +53,7 @@ def explain_verdict(diag: BudgetDiagnosis) -> list[str]:
     m = diag.metrics
     out = [
         _VERDICT_VI[diag.verdict],
-        f"Anh tiết kiệm được {pct(m.savings_rate)} thu nhập và có quỹ khẩn cấp "
+        f"Mo tiết kiệm được {pct(m.savings_rate)} thu nhập và có quỹ khẩn cấp "
         f"{m.emergency_months:.1f} tháng chi tiêu thiết yếu.",
     ]
     if diag.levers:
@@ -62,7 +62,7 @@ def explain_verdict(diag: BudgetDiagnosis) -> list[str]:
     if diag.debt_avalanche and diag.debt_snowball:
         a, s = diag.debt_avalanche, diag.debt_snowball
         out.append(
-            f"Anh trả nợ theo lãi suất cao trước sẽ tốn {trieu(a.total_interest)} tiền lãi, "
+            f"Mo trả nợ theo lãi suất cao trước sẽ tốn {trieu(a.total_interest)} tiền lãi, "
             f"rẻ hơn cách trả nợ nhỏ trước ({trieu(s.total_interest)})."
         )
     return out

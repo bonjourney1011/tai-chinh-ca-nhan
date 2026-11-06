@@ -12,7 +12,7 @@ export function openSettings(host, payload, ctx) {
     sheetUrl && /^https:\/\/docs\.google\.com\//.test(sheetUrl)
       ? el('a', { class: 'btn btn--ghost btn--wide', href: sheetUrl, target: '_blank', rel: 'noopener noreferrer', text: 'Mở Google Sheet' }) : null,
     el('button', { type: 'button', class: 'btn btn--ghost btn--wide btn--danger', text: 'Quên link trên máy này', onclick: () => {
-      if (!window.confirm('Xóa link riêng khỏi điện thoại này? Anh cần mở lại link có #t= để vào tiếp.')) return;
+      if (!window.confirm('Xóa link riêng khỏi điện thoại này? Mo cần mở lại link có #t= để vào tiếp.')) return;
       forgetToken();
       window.location.reload();
     } }));

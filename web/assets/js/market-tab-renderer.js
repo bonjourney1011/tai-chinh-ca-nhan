@@ -25,8 +25,8 @@ export function renderMarket(view, payload, ctx) {
       el('ul', { class: 'bridge' },
         el('li', {}, el('span', { text: 'Giá và lãi suất' }), el('b', { text: formatDate(asOf.prices) || 'chưa có' })),
         el('li', {}, el('span', { text: 'Kế hoạch gần nhất' }), el('b', { text: formatDate(asOf.plan) || 'chưa có' })),
-        el('li', {}, el('span', { text: 'Số anh đang giữ' }), el('b', { text: formatDate(asOf.tracking) || 'chưa có' }))),
-      asOf.stale_days > 0 || stale ? el('p', { class: 'warn-note', text: `⚠ Có ${stale || 'một số'} giá đã cũ${asOf.stale_days > 0 ? ` (${asOf.stale_days} ngày)` : ''}. Anh nhập giá mới để kế hoạch chính xác hơn.` }) : null),
+        el('li', {}, el('span', { text: 'Số Mo đang giữ' }), el('b', { text: formatDate(asOf.tracking) || 'chưa có' }))),
+      asOf.stale_days > 0 || stale ? el('p', { class: 'warn-note', text: `⚠ Có ${stale || 'một số'} giá đã cũ${asOf.stale_days > 0 ? ` (${asOf.stale_days} ngày)` : ''}. Mo nhập giá mới để kế hoạch chính xác hơn.` }) : null),
     canEnter ? el('button', { type: 'button', class: 'btn', text: 'Nhập giá / lãi suất', onclick: () => ctx.openAction('price_manual_add') }) : null,
     card('Giá và lãi suất',
       (payload.market || []).length

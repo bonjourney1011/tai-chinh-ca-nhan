@@ -52,7 +52,7 @@ export function renderGoalDetail(view, goal, payload, ctx) {
     driftCard(goal, payload),
     el('div', { class: 'item__actions' },
       el('button', { type: 'button', class: 'btn btn--ghost', text: 'Sửa', onclick: () => ctx.openAction('goal_save', goalPrefill(goal)) }),
-      el('button', { type: 'button', class: 'btn btn--ghost', text: 'Đánh dấu xong', onclick: () => setStatus(ctx, goal, 'da_dat', 'Anh đã đạt mục tiêu này?') }),
+      el('button', { type: 'button', class: 'btn btn--ghost', text: 'Đánh dấu xong', onclick: () => setStatus(ctx, goal, 'da_dat', 'Mo đã đạt mục tiêu này?') }),
       el('button', { type: 'button', class: 'btn btn--ghost btn--danger', text: 'Hủy', onclick: () => setStatus(ctx, goal, 'huy', 'Hủy mục tiêu này? Lịch sử gửi vẫn được giữ.') })),
     renderHistoryCard(goal, payload, ctx));
 }

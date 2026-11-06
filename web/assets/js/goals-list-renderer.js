@@ -18,7 +18,7 @@ export function renderGoals(view, payload, ctx) {
   const closed = payload.goals.filter((g) => !isActive(g));
   mount(view,
     el('button', { type: 'button', class: 'btn', text: '＋ Mục tiêu mới', onclick: () => ctx.openAction('goal_save', {}) }),
-    !active.length ? card(null, el('p', { class: 'muted', text: 'Anh chưa có mục tiêu nào đang chạy.' })) : null,
+    !active.length ? card(null, el('p', { class: 'muted', text: 'Mo chưa có mục tiêu nào đang chạy.' })) : null,
     active.map((g) => goalCard(g, ctx)),
     closed.length ? el('details', { class: 'card more' }, el('summary', { text: `Đã đạt hoặc đã hủy (${closed.length})` }),
       closed.map((g) => el('p', { class: 'muted', text: `${g.ten}: ${g.trang_thai === 'da_dat' ? 'đã đạt' : 'đã hủy'}` }))) : null);

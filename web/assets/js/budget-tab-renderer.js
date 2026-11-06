@@ -7,7 +7,7 @@ const kpi = (label, value, tone = '') => el('div', { class: 'kpi' }, el('p', { c
 
 function metricsCard(m) {
   const verdict = m.kha_thi ? `Đủ gửi ${formatShort(m.can_gui)}/tháng ✓` : `Thiếu ${formatShort(m.thieu)}/tháng`;
-  return card('Mỗi tháng của anh',
+  return card('Mỗi tháng của Mo',
     el('div', { class: 'kpis' },
       kpi('Thu', formatShort(m.thu_thang), 'pos'), kpi('Chi', formatShort(m.chi_thang)),
       kpi('Còn dư', formatShort(m.du_thang), m.du_thang < 0 ? 'neg' : ''), kpi('Tiết kiệm được', `${Math.round(ratioToPct(m.ty_le_tiet_kiem))}%`),
@@ -18,7 +18,7 @@ function metricsCard(m) {
 function adviceCard(budget, payload) {
   const { metrics: m, levers = [] } = budget;
   if (!m.ly_do && !levers.length) return null;
-  const title = m.huong === 'tang_thu' ? 'Anh nên tăng thu nhập' : 'Anh nên cắt bớt chi';
+  const title = m.huong === 'tang_thu' ? 'Mo nên tăng thu nhập' : 'Mo nên cắt bớt chi';
   return card(title, m.ly_do ? el('p', { text: m.ly_do }) : null,
     levers.length ? el('ol', { class: 'levers' }, levers.map((l) => el('li', {},
       el('b', { text: l.ten }),

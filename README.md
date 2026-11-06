@@ -1,6 +1,6 @@
 # Tài chính cá nhân theo mục tiêu
 
-Trang web giúp anh đặt mục tiêu tiền (mua nhà, du học, quỹ khẩn cấp...), xem cần gửi bao nhiêu mỗi tháng, ghi lại các khoản đã gửi/rút và theo dõi tiến độ.
+Trang web giúp Mo đặt mục tiêu tiền (mua nhà, du học, quỹ khẩn cấp...), xem cần gửi bao nhiêu mỗi tháng, ghi lại các khoản đã gửi/rút và theo dõi tiến độ.
 
 - **Trang web** (GitHub Pages, thư mục `web/`): chỉ hiển thị và gửi lệnh.
 - **Google Apps Script + Google Sheet** (thư mục `apps-script/`): nơi lưu dữ liệu và nhận lệnh từ trang.
@@ -11,7 +11,7 @@ Ai ghi tab nào:
 
 | Bên | Tab |
 |---|---|
-| Apps Script (anh nhập qua trang) | `Config`, `Goals`, `Budget`, `Contributions`, `Holdings`, `Manual_Prices`, `Snapshot` |
+| Apps Script (Mo nhập qua trang) | `Config`, `Goals`, `Budget`, `Contributions`, `Holdings`, `Manual_Prices`, `Snapshot` |
 | Python (đừng sửa tay) | `Assets`, `Prices_Latest`, `Plan`, `Tracking`, `Run_Log` |
 
 ---
@@ -20,7 +20,7 @@ Ai ghi tab nào:
 
 ### Bước 1. Tạo Sheet và dán code
 
-1. Vào `sheets.new`, đặt tên "Tài chính cá nhân". Dùng tài khoản Google anh dùng hằng ngày.
+1. Vào `sheets.new`, đặt tên "Tài chính cá nhân". Dùng tài khoản Google Mo dùng hằng ngày.
 2. Mở **Tiện ích mở rộng → Apps Script**.
 3. Với **từng file** trong `apps-script/`: bấm **＋ → Tập lệnh**, đặt tên đúng như tên file (bỏ đuôi `.gs`), dán nội dung. Có 18 file `.gs`, liệt kê ở mục "Cho người sửa code" bên dưới.
 4. **Cài đặt dự án ⚙️** → tick "Hiển thị tệp kê khai appsscript.json", mở file đó và dán nội dung `apps-script/appsscript.json`.
@@ -40,14 +40,14 @@ Ai ghi tab nào:
 1. Đẩy repo lên GitHub, vào **Settings → Pages**, chọn nhánh và thư mục chứa `web/`.
 2. Copy link trang (dạng `https://<tên>.github.io/<repo>/`), dán vào tab `Config`, dòng `site_url`.
 
-### Bước 4. Tạo link riêng cho anh
+### Bước 4. Tạo link riêng cho Mo
 
 1. Mở lại Sheet, đợi vài giây sẽ có menu **Tài chính**.
-2. Chọn **Tài chính → 🔑 Tạo link mới cho anh**, copy link dạng `.../#t=...`.
+2. Chọn **Tài chính → 🔑 Tạo link mới cho Mo**, copy link dạng `.../#t=...`.
    - Không thấy menu: trong Apps Script chạy hàm `rotateTokenFromEditor`, hộp thoại hiện trong Sheet.
 3. Gửi link qua tin nhắn riêng, mở 1 lần trên điện thoại là trang tự nhớ.
 4. Lỡ lộ link: bấm 🔑 lần nữa, link cũ hết hiệu lực ngay.
-5. Nhập sai token 5 lần trong 10 phút thì API trả lời "tạm khoá" cho token sai. Token đúng **luôn vào được**, nên người lạ không khoá được anh.
+5. Nhập sai token 5 lần trong 10 phút thì API trả lời "tạm khoá" cho token sai. Token đúng **luôn vào được**, nên người lạ không khoá được Mo.
 
 ### Bước 5. Bật chụp số liệu hằng ngày
 

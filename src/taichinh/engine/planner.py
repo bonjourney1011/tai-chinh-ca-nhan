@@ -164,7 +164,7 @@ def plan_goals_sequential(
         )
         if give < goal.target_amount - goal.current_pv and left <= 0:
             plan.warnings.append(
-                "Vốn ban đầu không đủ cho mục tiêu này; anh dựa vào tiền gửi hàng tháng."
+                "Vốn ban đầu không đủ cho mục tiêu này; Mo dựa vào tiền gửi hàng tháng."
             )
         plans.append(plan)
     return plans

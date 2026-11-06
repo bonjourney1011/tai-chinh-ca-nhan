@@ -108,7 +108,7 @@ export const demoPayload = {
   ],
   budget: {
     rows: budgetRows,
-    metrics: { thu_thang: 43 * M, chi_thang: 21.1 * M, du_thang: 21.9 * M, ty_le_tiet_kiem: 0.51, quy_khan_cap_thang: 3.4, can_gui: 20.5 * M, kha_thi: true, thieu: 0, huong: 'cat_chi', ly_do: 'Anh đủ tiền gửi các mục tiêu. Cắt thêm chi tiêu nhỏ sẽ giúp Quỹ học cho con bắt kịp tiến độ.' },
+    metrics: { thu_thang: 43 * M, chi_thang: 21.1 * M, du_thang: 21.9 * M, ty_le_tiet_kiem: 0.51, quy_khan_cap_thang: 3.4, can_gui: 20.5 * M, kha_thi: true, thieu: 0, huong: 'cat_chi', ly_do: 'Mo đủ tiền gửi các mục tiêu. Cắt thêm chi tiêu nhỏ sẽ giúp Quỹ học cho con bắt kịp tiến độ.' },
     levers: [
       { ten: 'Giảm cà phê, ăn ngoài 1tr/tháng', tiet_kiem_thang: 1 * M, som_hon_thang: 2, goal_id: 'G002' },
       { ten: 'Trả hết nợ mua xe sớm', tiet_kiem_thang: 2.6 * M, som_hon_thang: 3, goal_id: 'G001' }

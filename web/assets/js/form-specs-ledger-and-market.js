@@ -29,8 +29,8 @@ export const holdingSet = {
   icon: '📦', title: 'Cập nhật số đang giữ', submit: 'Lưu số đang giữ', action: 'holding_set',
   fields: [
     goalField, assetField('Loại tài sản'),
-    { name: 'so_luong', type: 'number', label: 'Anh đang giữ bao nhiêu (số lượng)', required: true, min: 0 },
-    { name: 'gia_von_vnd', type: 'money', label: 'Tổng tiền anh đã bỏ ra mua', more: true }
+    { name: 'so_luong', type: 'number', label: 'Mo đang giữ bao nhiêu (số lượng)', required: true, min: 0 },
+    { name: 'gia_von_vnd', type: 'money', label: 'Tổng tiền Mo đã bỏ ra mua', more: true }
   ]
 };
 

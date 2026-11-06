@@ -36,8 +36,8 @@ export const goalSave = {
     { name: 'kieu_han', type: 'choice', label: 'Hạn đạt mục tiêu', required: true, local: true, options: () => [{ value: 'ngay', label: 'Theo ngày' }, { value: 'thang', label: 'Theo số tháng' }] },
     { name: 'ngay_dich', type: 'date', label: 'Ngày cần có tiền', required: true, showIf: (v) => v.kieu_han !== 'thang', min: (p) => p.today },
     { name: 'so_thang', type: 'number', integer: true, label: 'Số tháng nữa', required: true, showIf: (v) => v.kieu_han === 'thang', min: 1, max: 600, placeholder: 'VD 36' },
-    ...amountFields('tien_co_san', 'Tiền anh đã có sẵn', false),
-    { name: 'ho_so_rui_ro', type: 'choice', label: 'Anh chấp nhận rủi ro mức nào', required: true, options: () => RISK },
+    ...amountFields('tien_co_san', 'Tiền Mo đã có sẵn', false),
+    { name: 'ho_so_rui_ro', type: 'choice', label: 'Mo chấp nhận rủi ro mức nào', required: true, options: () => RISK },
     { name: 'uu_tien', type: 'choice', label: 'Mức ưu tiên', required: true, options: () => PRIORITY },
     { name: 'ghi_chu', type: 'text', label: 'Ghi chú', more: true }
   ]

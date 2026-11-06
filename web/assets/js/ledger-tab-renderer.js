@@ -13,7 +13,7 @@ function holdingRow(h, ctx) {
 function holdingsCards(payload, ctx) {
   const groups = new Map();
   for (const h of payload.holdings || []) groups.set(h.goal_id, [...(groups.get(h.goal_id) || []), h]);
-  if (!groups.size) return card('Anh đang giữ gì', el('p', { class: 'muted', text: 'Chưa có số liệu. Bấm "Cập nhật số đang giữ" để thêm.' }));
+  if (!groups.size) return card('Mo đang giữ gì', el('p', { class: 'muted', text: 'Chưa có số liệu. Bấm "Cập nhật số đang giữ" để thêm.' }));
   return [...groups].map(([goalId, rows]) => card(goalName(payload, goalId),
     ...rows.map((h) => holdingRow(h, ctx)),
     el('p', { class: 'card__hint', text: `Tổng ${formatVnd(rows.reduce((sum, h) => sum + (Number(h.gia_tri_vnd) || 0), 0))}` })));

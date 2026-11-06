@@ -1,6 +1,6 @@
 # Phương pháp tính
 
-Tài liệu này giải thích máy tính làm gì khi anh đặt một mục tiêu. Mọi công thức nằm trong `src/taichinh/engine/`.
+Tài liệu này giải thích máy tính làm gì khi Mo đặt một mục tiêu. Mọi công thức nằm trong `src/taichinh/engine/`.
 
 ## 1. Mục tiêu → số tiền cần gửi mỗi tháng
 - Số tiền đích được tính cả lạm phát: `G = G0 × (1 + CPI)^(n/12)` (CPI mặc định 4,5%/năm, sửa trong `config/cma.yml`). Mục tiêu bằng USD chỉ cộng trượt giá USD/VND (2%/năm), không cộng thêm CPI.
@@ -19,7 +19,7 @@ Bước 1 — trần tài sản rủi ro (cổ phiếu, vàng, ETF Mỹ, BTC) = 
 
 Bước 2 — chia bên trong mỗi nhóm bằng danh mục phương sai nhỏ nhất (Markowitz, chỉ mua, có trần từng tài sản như BTC ≤ 5%, vàng ≤ 30%). Máy so thêm 3 cách khác (chia đều rủi ro, chia đều tiền, tangency cổ điển) và chọn cách có xác suất đạt cao nhất.
 
-Lợi nhuận kỳ vọng lấy từ giả định trong `config/cma.yml` (anh sửa được low/base/high). Độ biến động và tương quan ước từ lịch sử giá tháng (ưu tiên ≥ 120 tháng) có co rút Ledoit-Wolf; lịch sử ngắn thì nghiêng về giả định.
+Lợi nhuận kỳ vọng lấy từ giả định trong `config/cma.yml` (Mo sửa được low/base/high). Độ biến động và tương quan ước từ lịch sử giá tháng (ưu tiên ≥ 120 tháng) có co rút Ledoit-Wolf; lịch sử ngắn thì nghiêng về giả định.
 
 ## 3. Ngân sách
 - Tỷ lệ tiết kiệm `s = (thu − chi)/thu`; khả thi `F = PMT / tiền nhàn rỗi`; quỹ khẩn cấp = tiền gửi + quỹ trái phiếu chia chi thiết yếu.

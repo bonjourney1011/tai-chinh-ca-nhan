@@ -17,7 +17,7 @@ var CONFIG_NOTES = {
   gui_toi_da_1_lan: 'Một lần ghi gửi/rút tối đa bao nhiêu đồng (chặn gõ nhầm "tr" thành "k").',
   kich_ban: 'Kịch bản cho phần Python tính: low | base | high.',
   tai_san_nuoc_ngoai: '0 = chỉ tài sản trong nước, 1 = thêm ETF Mỹ và BTC vào mọi mục tiêu.',
-  site_url: 'Link trang web của anh (GitHub Pages) để menu tạo link riêng. Sửa ở đây, không sửa trên web.',
+  site_url: 'Link trang web của Mo (GitHub Pages) để menu tạo link riêng. Sửa ở đây, không sửa trên web.',
   sheet_url: 'Link Sheet này, hiện trên trang Cài đặt. Tự điền khi chạy setupSheets.'
 };
 

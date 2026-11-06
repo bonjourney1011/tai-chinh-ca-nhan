@@ -62,8 +62,8 @@ function alertsCard(alerts, ctx) {
 export function renderOverview(view, payload, ctx) {
   if (!payload.goals.length) {
     mount(view, 
-      card(null, el('p', { class: 'empty-title', text: 'Anh chưa có mục tiêu nào.' }),
-        el('p', { class: 'muted', text: 'Tạo một mục tiêu, máy tính sẽ cho anh biết mỗi tháng cần gửi bao nhiêu.' }),
+      card(null, el('p', { class: 'empty-title', text: 'Mo chưa có mục tiêu nào.' }),
+        el('p', { class: 'muted', text: 'Tạo một mục tiêu, máy tính sẽ cho Mo biết mỗi tháng cần gửi bao nhiêu.' }),
         el('button', { type: 'button', class: 'btn', text: 'Tạo mục tiêu đầu tiên', onclick: () => ctx.openAction('goal_save', {}, 'goals') })),
       heroCard(payload));
     return;

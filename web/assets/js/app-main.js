@@ -124,7 +124,7 @@ function init() {
   }
   const token = captureToken();
   if (!token) {
-    showGate('Cần link riêng', 'Mở link có #t= mà anh tạo từ Google Sheet. Mở 1 lần là điện thoại tự nhớ.');
+    showGate('Cần link riêng', 'Mở link có #t= mà Mo tạo từ Google Sheet. Mở 1 lần là điện thoại tự nhớ.');
     return;
   }
   setToken(token);

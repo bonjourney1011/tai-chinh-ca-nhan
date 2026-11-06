@@ -7,7 +7,7 @@ var SNAPSHOT_HANDLER = 'runDailySnapshot';
 function onOpen() {
   SpreadsheetApp.getUi()
     .createMenu('Tài chính')
-    .addItem('🔑 Tạo link mới cho anh (link cũ hết hiệu lực)', 'createOwnerLink')
+    .addItem('🔑 Tạo link mới cho Mo (link cũ hết hiệu lực)', 'createOwnerLink')
     .addItem('⏰ Bật chụp số liệu 7h sáng hằng ngày', 'installSnapshotTrigger')
     .addItem('📸 Chụp số liệu ngay', 'runSnapshotWithToast')
     .addToUi();
@@ -18,11 +18,11 @@ function createOwnerLink() {
   var siteUrl = String(readState().config.site_url || '').trim();
   var link = siteUrl ? siteUrl.replace(/#.*$/, '') + '#t=' + token : '(Chưa điền site_url trong tab Config) token: ' + token;
   var html = HtmlService.createHtmlOutput(
-    '<p style="font:14px sans-serif">Gửi link này cho anh qua tin nhắn riêng. Mở 1 lần là trang tự nhớ.</p>' +
+    '<p style="font:14px sans-serif">Gửi link này cho Mo qua tin nhắn riêng. Mở 1 lần là trang tự nhớ.</p>' +
     '<textarea readonly style="width:100%;height:90px;font:13px monospace" onclick="this.select()">' +
     escapeHtml_(link) + '</textarea>'
   ).setWidth(460).setHeight(200);
-  SpreadsheetApp.getUi().showModalDialog(html, 'Link riêng cho anh');
+  SpreadsheetApp.getUi().showModalDialog(html, 'Link riêng cho Mo');
 }
 
 /** Same as the menu item, for running from the editor when the menu is not visible. */

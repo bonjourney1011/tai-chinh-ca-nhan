@@ -48,7 +48,7 @@ export function planLine(goal) {
   const plans = goal.plans || [];
   const chosen = plans.find((p) => p.phuong_an === goal.phuong_an_chon);
   if (chosen) return `Đang chọn: ${PLAN_LABELS[chosen.phuong_an]}. Gửi ${formatShort(chosen.gui_hang_thang)}/tháng, khả năng đạt ${Math.round(ratioToPct(chosen.xac_suat_dat))}%.`;
-  if (plans.length) return 'Anh chưa chọn phương án. Mở mục tiêu để chọn.';
+  if (plans.length) return 'Mo chưa chọn phương án. Mở mục tiêu để chọn.';
   const quick = goal.uoc_tinh_nhanh ? ` Ước tính nhanh: ${formatShort(goal.uoc_tinh_nhanh)}/tháng.` : '';
   return `Chưa có kế hoạch. Máy tính sẽ chạy cuối tháng.${quick}`;
 }

@@ -14,7 +14,7 @@ REASON_VI = {
     "us_etf": "Đa dạng hóa sang thị trường Mỹ, hợp mục tiêu bằng USD",
     "btc": "Tỷ trọng nhỏ cho tăng trưởng cao, biến động rất lớn",
 }
-STOCK_REASON = "Cổ phiếu anh chọn, tăng trưởng nhưng rủi ro riêng cao"
+STOCK_REASON = "Cổ phiếu Mo chọn, tăng trưởng nhưng rủi ro riêng cao"
 
 
 def allocation_list(weights: dict[str, float], cma_to_asset: dict[str, str]) -> list[dict]:
