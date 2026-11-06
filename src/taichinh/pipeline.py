@@ -123,6 +123,7 @@ def compute(
             res.warnings.append(f"{goal.id}: thiếu giá cho {', '.join(sorted(set(missing)))}")
         target = {to_asset.get(k, k): w for k, w in plan.mix.weights.items() if w > 0}
         elapsed = months_between(parse_date(raw.get("tao_luc")), today)
+        # Tracking counts the same money as the plan: cash set aside + holdings at market.
         res.tracking_rows.append(tracking_row(
-            goal.id, today, actual, by_asset, plan, goal.current_pv, elapsed, target, run_at))
+            goal.id, today, pv_vnd, by_asset, plan, pv_vnd - actual, elapsed, target, run_at))
     return res

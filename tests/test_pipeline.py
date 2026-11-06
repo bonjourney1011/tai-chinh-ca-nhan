@@ -37,8 +37,8 @@ def test_chi_gui_uses_only_safe_sleeve(result):
 
 def test_tracking_values(result):
     t = {r[0]: r for r in result.tracking_rows}
-    # G1: 15,000,000 deposit + 500 * latest E1VFVN30 price
-    assert t["G1"][2] > 15_000_000
+    # G1: 20,000,000 cash set aside + 15,000,000 deposit + 500 * latest E1VFVN30 price
+    assert t["G1"][2] > 35_000_000
     assert t["G1"][1] == "2026-11-06" and isinstance(t["G1"][4], bool)
-    assert t["G2"][2] > 0  # QTP manual price 12,500 x 1000 = 12.5m
-    assert t["G2"][2] == 12_500_000
+    # G2: QTP manual price 12,500 x 1000 = 12.5m + 2,000 USD cash at the fx spot
+    assert t["G2"][2] > 12_500_000 + 2000 * 20_000
