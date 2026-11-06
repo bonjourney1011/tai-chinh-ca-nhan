@@ -107,6 +107,14 @@ test('direction: a shortfall bigger than a 20% cut of variable spending also mea
   assert.match(m.ly_do, /tăng thu nhập/);
 });
 
+test('can_gui skips low-priority (dream) goals', () => {
+  const s = household();
+  const before = gs.buildDashboardPayload(s, TODAY).budget.metrics.can_gui;
+  s.goals[0].uu_tien = 'thap';
+  assert.equal(gs.buildDashboardPayload(s, TODAY).budget.metrics.can_gui, 0);
+  assert.ok(before > 0);
+});
+
 test('levers: raising income by 1, 2 and 5 million is offered next to the cuts', () => {
   const levers = plain(gs.buildDashboardPayload(household(), TODAY).budget.levers);
   const five = levers.find((l) => l.ten === 'Tăng thu nhập +5 triệu/tháng, gửi hết phần tăng');

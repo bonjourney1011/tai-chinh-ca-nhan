@@ -98,7 +98,8 @@ function buildDashboardPayload(state, today) {
   var summary = {
     tong_tai_san: total, doi_dau_thang: startTotal === null ? null : total - startTotal, theo_nhom: byGroup, no: Math.round(debt),
     quy_khan_cap_thang: budget.metrics.quy_khan_cap_thang,
-    can_gui_thang_nay: active.reduce(function (s, g) { return s + g.gui_thang_nay.de_xuat; }, 0),
+    can_gui_thang_nay: active.filter(function (g) { return g.uu_tien !== 'thap'; })
+      .reduce(function (s, g) { return s + g.gui_thang_nay.de_xuat; }, 0),
     da_gui_thang_nay: active.reduce(function (s, g) { return s + g.gui_thang_nay.da_gui; }, 0)
   };
   return fitPayload({

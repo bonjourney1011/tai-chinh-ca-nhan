@@ -84,7 +84,8 @@ function computeBudgetMetrics(budgetRows, info) {
   var debtMin = rows.filter(function (r) { return r.loai === 'no'; }).reduce(function (s, r) { return s + toNumberOrZero(r.tra_toi_thieu); }, 0);
   var du = thu - chi - debtMin;
   var savingsRate = thu > 0 ? du / thu : 0;
-  var canGui = info.goals.filter(function (g) { return g.trang_thai === 'dang'; })
+  // Low-priority goals (dream goals) are planned but not demanded from this month's surplus.
+  var canGui = info.goals.filter(function (g) { return g.trang_thai === 'dang' && g.uu_tien !== 'thap'; })
     .reduce(function (s, g) { return s + (plannedMonthlyVnd(g) || 0); }, 0);
   var essentialRatio = thu > 0 ? fixed / thu : 0;
   var thieu = Math.max(0, canGui - Math.max(du, 0));
