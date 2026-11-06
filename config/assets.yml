@@ -12,6 +12,15 @@ assets:
     cma_key: deposit_12m
     lot_size: 1
     source: manual
+  - asset_id: CHO_VAY
+    ten: Cho vay (tiền người khác nợ Mo)
+    nhom: khac
+    tien_te: VND
+    loai_gia: lai_suat
+    nhap_tay: true
+    lot_size: 1
+    source: manual
+    # no cma_key: counted in total assets and goal progress, never allocated by the planner
   - asset_id: QTP
     ten: Quỹ trái phiếu (NAV)
     nhom: trai_phieu

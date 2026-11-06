@@ -122,6 +122,8 @@ def compute(
         if missing:
             res.warnings.append(f"{goal.id}: thiếu giá cho {', '.join(sorted(set(missing)))}")
         target = {to_asset.get(k, k): w for k, w in plan.mix.weights.items() if w > 0}
+        # Non-investable holdings (e.g. money lent out) count in the value, not in the drift.
+        by_asset = {a: v for a, v in by_asset.items() if a in set(to_asset.values())}
         elapsed = months_between(parse_date(raw.get("tao_luc")), today)
         # Tracking counts the same money as the plan: cash set aside + holdings at market.
         res.tracking_rows.append(tracking_row(
