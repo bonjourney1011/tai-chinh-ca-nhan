@@ -1,0 +1,7 @@
+<!--For reference only. Only one request every 5 minutes!-->
+<ExrateList>
+  <DateTime>11/6/2026 8:00:06 AM</DateTime>
+  <Exrate CurrencyCode="EUR" CurrencyName="EURO                " Buy="28,050.89" Transfer="28,334.23" Sell="29,530.95" />
+  <Exrate CurrencyCode="USD" CurrencyName="US DOLLAR           " Buy="25,390.00" Transfer="25,420.00" Sell="25,800.00" />
+  <Source>Joint Stock Commercial Bank for Foreign Trade of Vietnam - Vietcombank</Source>
+</ExrateList>
