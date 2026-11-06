@@ -1,0 +1,28 @@
+# secrets & personal data — never commit
+.env
+secrets/
+_private/
+plans/
+reports/
+data/personal/
+*.json.key
+sa*.json
+
+# python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+dist/
+build/
+*.egg-info/
+
+# node
+node_modules/
+
+# os / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

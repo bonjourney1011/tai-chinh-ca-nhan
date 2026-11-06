@@ -1,0 +1,90 @@
+# Asset catalog. asset_id is the key used everywhere (CSV, Sheet, engine).
+# nhom: tien_gui | trai_phieu | co_phieu | vang | usd | khac
+# loai_gia: gia (price per unit) | lai_suat (annual rate, %)
+# nhap_tay: true when no automated source exists (user enters monthly on the web page)
+assets:
+  - asset_id: TK12
+    ten: Tiền gửi 12 tháng
+    nhom: tien_gui
+    tien_te: VND
+    loai_gia: lai_suat
+    nhap_tay: true
+    cma_key: deposit_12m
+    lot_size: 1
+    source: manual
+  - asset_id: QTP
+    ten: Quỹ trái phiếu (NAV)
+    nhom: trai_phieu
+    tien_te: VND
+    loai_gia: gia
+    nhap_tay: true
+    cma_key: bond_fund
+    lot_size: 1
+    source: manual
+  - asset_id: E1VFVN30
+    ten: ETF VN30 (E1VFVN30)
+    nhom: co_phieu
+    tien_te: VND
+    loai_gia: gia
+    nhap_tay: false
+    cma_key: etf_vn30
+    lot_size: 100
+    source: vndirect
+    symbol: E1VFVN30
+  - asset_id: VNINDEX
+    ten: VN-Index (tham chiếu)
+    nhom: khac
+    tien_te: VND
+    loai_gia: gia
+    nhap_tay: false
+    cma_key: vnindex
+    lot_size: 0
+    source: vndirect
+    symbol: VNINDEX
+    benchmark_only: true
+  - asset_id: SJC
+    ten: Vàng SJC (lượng)
+    nhom: vang
+    tien_te: VND
+    loai_gia: gia
+    nhap_tay: false
+    cma_key: gold_sjc
+    lot_size: 0.1
+    source: sjc
+    product: SJC_1L
+  - asset_id: USDVND
+    ten: Tỷ giá USD/VND (VCB chuyển khoản)
+    nhom: khac
+    tien_te: VND
+    loai_gia: gia
+    nhap_tay: false
+    cma_key: null
+    lot_size: 0
+    source: vietcombank
+    fx_only: true
+  - asset_id: VOO
+    ten: ETF S&P 500 (VOO)
+    nhom: usd
+    tien_te: USD
+    loai_gia: gia
+    nhap_tay: false
+    cma_key: us_etf
+    lot_size: 1
+    source: tiingo
+    symbol: VOO
+  - asset_id: BTC
+    ten: Bitcoin
+    nhom: usd
+    tien_te: USD
+    loai_gia: gia
+    nhap_tay: false
+    cma_key: btc
+    lot_size: 0.0001
+    source: kraken
+    symbol: XBTUSD
+
+# User-chosen single VN stocks (≤ 20). Each uses cma_key stock_default unless overridden.
+user_stocks: []
+# example:
+# user_stocks:
+#   - { asset_id: VCB, ten: Vietcombank, symbol: VCB }

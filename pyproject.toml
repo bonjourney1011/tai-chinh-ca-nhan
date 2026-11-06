@@ -1,0 +1,41 @@
+[project]
+name = "taichinh"
+version = "0.1.0"
+description = "Personal goal-based portfolio planner for Vietnamese assets with Google Sheet tracking"
+requires-python = ">=3.13"
+dependencies = [
+  "pandas>=2.3,<3",
+  "numpy>=2.3,<3",
+  "scipy>=1.16,<2",
+  "gspread>=6.2,<7",
+  "google-auth>=2.40,<3",
+  "requests>=2.32,<3",
+  "pyyaml>=6.0,<7",
+  "typer>=0.17,<1",
+  "python-dotenv>=1.1,<2",
+]
+
+[project.scripts]
+taichinh = "taichinh.cli:app"
+
+[dependency-groups]
+dev = ["pytest>=8.4,<9", "ruff>=0.13,<1"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/taichinh"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]

@@ -1,0 +1,95 @@
+# Capital-market assumptions (annual, nominal VND unless currency says otherwise).
+# Edit mu_low/mu_base/mu_high freely; sigma and correlations are blended with history when ≥ 24 months exist.
+version: "2026-11"
+inflation: { low: 0.03, base: 0.045, high: 0.06 }
+risk_free: 0.044   # 10Y government bond anchor (VBMA, Jun 2026 ≈ 4.36%)
+history: { full_window_months: 120, min_window_months: 24 }
+assets:
+  deposit_12m:
+    sleeve: safe
+    mu_low: 0.05
+    mu_base: 0.06
+    mu_high: 0.07
+    sigma: 0.005
+    max_drawdown: 0.0
+    min_weight: 0.0
+    max_weight: 1.0
+    currency: VND
+    liquidity_days: 0
+  bond_fund:
+    sleeve: safe
+    mu_low: 0.04
+    mu_base: 0.055
+    mu_high: 0.065
+    sigma: 0.03
+    max_drawdown: -0.05
+    min_weight: 0.0
+    max_weight: 0.6
+    currency: VND
+    liquidity_days: 3
+    verified: false
+  etf_vn30:
+    sleeve: risky
+    mu_low: 0.06
+    mu_base: 0.10
+    mu_high: 0.12
+    sigma: 0.22
+    max_drawdown: -0.48
+    min_weight: 0.0
+    max_weight: 0.7
+    currency: VND
+    liquidity_days: 2
+  gold_sjc:
+    sleeve: risky
+    mu_low: 0.05
+    mu_base: 0.09
+    mu_high: 0.11
+    sigma: 0.16
+    max_drawdown: -0.30
+    min_weight: 0.0
+    max_weight: 0.3
+    currency: VND
+    liquidity_days: 0
+  us_etf:
+    sleeve: risky
+    mu_low: 0.05
+    mu_base: 0.08
+    mu_high: 0.10
+    sigma: 0.17
+    max_drawdown: -0.34
+    min_weight: 0.0
+    max_weight: 0.3
+    currency: USD
+    liquidity_days: 3
+    fx_drift: 0.02
+  btc:
+    sleeve: risky
+    mu_low: -0.20
+    mu_base: 0.15
+    mu_high: 0.40
+    sigma: 0.65
+    max_drawdown: -0.77
+    min_weight: 0.0
+    max_weight: 0.05
+    currency: USD
+    liquidity_days: 1
+    fx_drift: 0.02
+  stock_default:
+    sleeve: risky
+    mu_low: 0.04
+    mu_base: 0.10
+    mu_high: 0.14
+    sigma: 0.35
+    max_drawdown: -0.60
+    min_weight: 0.0
+    max_weight: 0.10
+    currency: VND
+    liquidity_days: 2
+benchmark: vnindex
+# symmetric; only upper triangle listed; missing pairs = 0
+prior_correlation:
+  etf_vn30: { gold_sjc: 0.10, bond_fund: 0.20, us_etf: 0.40, btc: 0.20, deposit_12m: 0.0, stock_default: 0.70 }
+  gold_sjc: { us_etf: 0.05, btc: 0.10, bond_fund: 0.05, stock_default: 0.10 }
+  us_etf: { btc: 0.35, bond_fund: 0.10, stock_default: 0.30 }
+  btc: { stock_default: 0.15 }
+  bond_fund: { deposit_12m: 0.3, stock_default: 0.15 }
