@@ -22,6 +22,7 @@ profiles:
     var_limit: 0.25
     risk_aversion: 2.5
     capacity_cap_no_emergency: 0.40
+    pick: max_return   # growth option = highest expected return inside the caps, not min-risk
 # map profile → plan option name shown on the web page
 plan_options: { chi_gui: bao_thu, can_bang: can_bang, tang_truong: tang_truong }
 rebalance_threshold: 0.05

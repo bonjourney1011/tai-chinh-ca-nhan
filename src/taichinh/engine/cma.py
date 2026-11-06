@@ -144,6 +144,7 @@ def load_profiles() -> dict[str, RiskProfile]:
             var_limit=v["var_limit"],
             risk_aversion=v["risk_aversion"],
             capacity_cap_no_emergency=v.get("capacity_cap_no_emergency", 0.3),
+            pick=v.get("pick", "p_success"),
         )
     return out
 

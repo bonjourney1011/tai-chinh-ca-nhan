@@ -70,7 +70,7 @@ assets:
     sigma: 0.65
     max_drawdown: -0.77
     min_weight: 0.0
-    max_weight: 0.05
+    max_weight: 0.10
     currency: USD
     liquidity_days: 1
     fx_drift: 0.02
@@ -81,8 +81,8 @@ assets:
     mu_high: 0.40
     sigma: 0.80
     max_drawdown: -0.85
-    min_weight: 0.0
-    max_weight: 0.05
+    min_weight: 0.05   # floor: keep the BNB already held (founder decision 06/11/2026)
+    max_weight: 0.10
     currency: USD
     liquidity_days: 1
     fx_drift: 0.02

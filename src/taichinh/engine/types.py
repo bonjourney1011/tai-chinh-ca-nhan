@@ -74,6 +74,7 @@ class RiskProfile:
     var_limit: float
     risk_aversion: float
     capacity_cap_no_emergency: float = 0.3
+    pick: str = "p_success"  # p_success (lowest risk that reaches the goal) | max_return
 
 
 @dataclass(frozen=True)

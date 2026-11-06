@@ -58,10 +58,15 @@ def _target(goal: Goal, n: int, cma: CapitalMarketAssumptions, fx_spot: float | 
     return g
 
 
-def _pick(evals: list[MixEvaluation], dd_limit: float) -> tuple[MixEvaluation, bool]:
-    """Best p_success among mixes within the drawdown limit (ties -> lower sigma)."""
+def _pick(
+    evals: list[MixEvaluation], dd_limit: float, rule: str = "p_success"
+) -> tuple[MixEvaluation, bool]:
+    """Within the drawdown limit: p_success -> best p_success (ties -> lower sigma);
+    max_return -> highest expected return (ties -> higher p_success)."""
     ok = [e for e in evals if e.mix.est_max_drawdown >= -dd_limit - 1e-12]
     pool = ok or [max(evals, key=lambda e: e.mix.est_max_drawdown)]
+    if rule == "max_return":
+        return max(pool, key=lambda e: (round(e.mix.mu, 6), e.mc.p_success)), bool(ok)
     best = max(e.mc.p_success for e in pool)
     near = [e for e in pool if best - e.mc.p_success < 0.01]
     return min(near, key=lambda e: e.mix.sigma), bool(ok)
@@ -100,7 +105,7 @@ def plan_goal(
             pmt = required_pmt(g - lump_fv, pv, n, mix.mu)
             paths = simulate_paths(pv, pmt, n, mix.mu, mix.sigma, n_paths, seed, lumps=lumps)
             evals.append(MixEvaluation(mix, pmt, summarize_paths(paths, g, seed=seed)))
-        rec, ok = _pick(evals, profile.max_drawdown)
+        rec, ok = _pick(evals, profile.max_drawdown, profile.pick)
         pmt80 = pmt_for_success(
             0.8, pv, n, rec.mix.mu, rec.mix.sigma, seed, g, n_paths=n_paths, lumps=lumps
         )

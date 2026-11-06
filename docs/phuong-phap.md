@@ -17,7 +17,7 @@ Bước 1 — trần tài sản rủi ro (cổ phiếu, vàng, ETF Mỹ, BTC) = 
 | Hồ sơ | bảo thủ 30% · cân bằng 55% · tăng trưởng 80% |
 | Ngân sách | quỹ khẩn cấp dưới 3 tháng hoặc phải gửi quá nửa tiền nhàn rỗi → giảm thêm |
 
-Bước 2 — chia bên trong mỗi nhóm bằng danh mục phương sai nhỏ nhất (Markowitz, chỉ mua, có trần từng tài sản như BTC ≤ 5%, vàng ≤ 30%). Máy so thêm 3 cách khác (chia đều rủi ro, chia đều tiền, tangency cổ điển) và chọn cách có xác suất đạt cao nhất.
+Bước 2 — chia bên trong mỗi nhóm bằng danh mục phương sai nhỏ nhất (Markowitz, chỉ mua, có trần và sàn từng tài sản như BTC ≤ 10%, BNB 5–10%, vàng ≤ 30%). Máy so thêm 4 cách khác (chia đều rủi ro, chia đều tiền, tangency cổ điển, lợi nhuận kỳ vọng cao nhất trong giới hạn). Phương án *chỉ gửi* và *cân bằng* chọn cách có xác suất đạt cao nhất (hoà thì ít biến động hơn); phương án *tăng trưởng* chọn cách có lợi nhuận kỳ vọng cao nhất trong giới hạn sụt giảm (`pick: max_return` trong profiles.yml), nên crypto vào đến trần và dải kết quả rộng hơn.
 
 Lợi nhuận kỳ vọng lấy từ giả định trong `config/cma.yml` (Mo sửa được low/base/high). Độ biến động và tương quan ước từ lịch sử giá tháng (ưu tiên ≥ 120 tháng) có co rút Ledoit-Wolf; lịch sử ngắn thì nghiêng về giả định.
 

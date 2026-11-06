@@ -51,6 +51,20 @@ def min_variance_boxed(cov: np.ndarray, lo: np.ndarray, hi: np.ndarray) -> np.nd
     return _solve(lambda w: float(w @ cov @ w), lambda w: 2.0 * cov @ w, cov, lo, hi, x0)
 
 
+def max_return_boxed(mu: np.ndarray, lo: np.ndarray, hi: np.ndarray) -> np.ndarray:
+    """Highest expected return inside the boxes: start at every floor, then pour the remaining
+    budget into assets in descending mu until each hits its cap (greedy LP solution)."""
+    w = lo.astype(float).copy()
+    left = 1.0 - w.sum()
+    for i in np.argsort(-np.asarray(mu, float)):
+        if left <= 1e-12:
+            break
+        add = min(hi[i] - w[i], left)
+        w[i] += add
+        left -= add
+    return project_to_boxes(w, lo, hi)
+
+
 def risk_contributions(w: np.ndarray, cov: np.ndarray) -> np.ndarray:
     """Fractional contributions w_i (Sigma w)_i / (w' Sigma w); sums to 1."""
     m = w * (cov @ w)
@@ -128,6 +142,9 @@ def candidate_mixes(w_eq: float, cma: CapitalMarketAssumptions, profile: RiskPro
            _start(r_lo, r_hi) if risky else empty, _start(s_lo, s_hi) if safe else empty),
     ]
     if risky and w_eq > 0:
+        mixes.append(mk("rule_maxret", "lợi nhuận kỳ vọng cao nhất trong giới hạn",
+                        max_return_boxed(cma.mu()[r_idx], r_lo, r_hi),
+                        max_return_boxed(cma.mu()[s_idx], s_lo, s_hi) if safe else empty))
         from taichinh.engine import markowitz
         from taichinh.engine.types import MarketInputs
 

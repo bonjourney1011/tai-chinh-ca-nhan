@@ -44,3 +44,17 @@ def test_zero_equity_mix():
     m = op.candidate_mixes(0.0, cma, load_profiles()["bao_thu"])[0]
     assert sum(m.weights.values()) == pytest.approx(1)
     assert all(m.weights[a] == 0 for a in m.weights if cma.assets[a].sleeve == "risky")
+
+
+def test_max_return_candidate_fills_caps_in_mu_order():
+    import numpy as np
+
+    mu = np.array([0.05, 0.15, 0.10])
+    lo, hi = np.array([0.0, 0.0, 0.1]), np.array([1.0, 0.3, 0.5])
+    w = op.max_return_boxed(mu, lo, hi)
+    assert abs(w.sum() - 1.0) < 1e-9
+    assert np.allclose(w, [0.2, 0.3, 0.5])  # 15% asset to its cap, then 10% asset, rest to 5%
+    cma = load_cma()
+    mixes = {m.name: m for m in op.candidate_mixes(0.4, cma, load_profiles()["tang_truong"])}
+    assert "rule_maxret" in mixes
+    assert mixes["rule_maxret"].mu >= mixes["rule_minvar"].mu - 1e-12
