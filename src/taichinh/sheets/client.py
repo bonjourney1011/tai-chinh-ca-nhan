@@ -48,7 +48,13 @@ def read_tab(sh: gspread.Spreadsheet, name: str) -> list[dict]:
     ws = _worksheet(sh, name, create=False)
     if ws is None:
         return []
-    values = _with_retry(ws.get_all_values)
+    # Raw numbers (a quantity 1.309 must not arrive as the display string "1,309") but
+    # dates as the strings the cell shows, so parse_date keeps working.
+    values = _with_retry(
+        ws.get_all_values,
+        value_render_option="UNFORMATTED_VALUE",
+        date_time_render_option="FORMATTED_STRING",
+    )
     cols = HEADERS[name]
     out = []
     for row in values[1:]:
