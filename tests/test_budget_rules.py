@@ -17,7 +17,7 @@ def make_metrics(**kw):
 def test_metrics():
     b = BudgetInputs(20e6, 8e6, 4e6, 16e6, debts=[Debt("a", 1e6, 0.1, 1e6)])
     m = br.budget_metrics(b, 4e6)
-    assert m.disposable == 8e6 and m.savings_rate == pytest.approx(0.4)
+    assert m.disposable == 7e6 and m.savings_rate == pytest.approx(0.35)
     assert m.feasibility == 0.5 and m.essential_ratio == 0.4
     assert m.emergency_months == 2 and m.debt_service_ratio == pytest.approx(0.05)
 

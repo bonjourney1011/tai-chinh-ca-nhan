@@ -1,36 +1,128 @@
 {
-  "Config": [{"key": "kich_ban", "value": "base", "ghi_chu": ""}],
+  "Config": [
+    {
+      "key": "kich_ban",
+      "value": "base",
+      "ghi_chu": ""
+    }
+  ],
   "Goals": [
-    {"goal_id": "G1", "ten": "Mua xe", "so_tien_dich": "300.000.000", "tien_te": "VND",
-     "ngay_dich": "2029-11-06", "tien_co_san": "20.000.000", "ho_so_rui_ro": "can_bang",
-     "uu_tien": "cao", "phuong_an_chon": "can_bang", "trang_thai": "dang", "ghi_chu": "",
-     "tao_luc": "2026-08-06", "cap_nhat_luc": ""},
-    {"goal_id": "G2", "ten": "Du học Mỹ", "so_tien_dich": "20000", "tien_te": "USD",
-     "ngay_dich": "2031-09-01", "tien_co_san": "50.000.000", "ho_so_rui_ro": "tang_truong",
-     "uu_tien": "vua", "phuong_an_chon": "", "trang_thai": "dang", "ghi_chu": "",
-     "tao_luc": "", "cap_nhat_luc": ""}
+    {
+      "goal_id": "G1",
+      "ten": "Mua xe",
+      "so_tien_dich": "300.000.000",
+      "tien_te": "VND",
+      "ngay_dich": "2029-11-06",
+      "tien_co_san": "20.000.000",
+      "ho_so_rui_ro": "can_bang",
+      "uu_tien": "cao",
+      "phuong_an_chon": "can_bang",
+      "trang_thai": "dang",
+      "ghi_chu": "",
+      "tao_luc": "2026-08-06",
+      "cap_nhat_luc": ""
+    },
+    {
+      "goal_id": "G2",
+      "ten": "Du học Mỹ",
+      "so_tien_dich": "20000",
+      "tien_te": "USD",
+      "ngay_dich": "2031-09-01",
+      "tien_co_san": "2000",
+      "ho_so_rui_ro": "tang_truong",
+      "uu_tien": "vua",
+      "phuong_an_chon": "",
+      "trang_thai": "dang",
+      "ghi_chu": "",
+      "tao_luc": "",
+      "cap_nhat_luc": ""
+    }
   ],
   "Budget": [
-    {"budget_id": "B1", "loai": "thu_nhap", "ten": "Lương", "so_tien": "30.000.000",
-     "chu_ky": "thang", "trang_thai": "dang"},
-    {"budget_id": "B2", "loai": "thu_nhap", "ten": "Thưởng Tết", "so_tien": "60.000.000",
-     "chu_ky": "nam", "trang_thai": "dang"},
-    {"budget_id": "B3", "loai": "chi_co_dinh", "ten": "Thuê nhà", "so_tien": "8.000.000",
-     "chu_ky": "thang", "trang_thai": "dang"},
-    {"budget_id": "B4", "loai": "chi_bien_doi", "ten": "Ăn uống", "so_tien": "7.000.000",
-     "chu_ky": "thang", "trang_thai": "dang"},
-    {"budget_id": "B5", "loai": "no", "ten": "Thẻ tín dụng", "so_tien": "10.000.000",
-     "lai_suat_nam": "18%", "tra_toi_thieu": "1.000.000", "trang_thai": "dang"}
+    {
+      "budget_id": "B1",
+      "loai": "thu_nhap",
+      "ten": "Lương",
+      "so_tien": "30.000.000",
+      "chu_ky": "thang",
+      "trang_thai": "dang"
+    },
+    {
+      "budget_id": "B2",
+      "loai": "thu_nhap",
+      "ten": "Thưởng Tết",
+      "so_tien": "60.000.000",
+      "chu_ky": "nam",
+      "trang_thai": "dang"
+    },
+    {
+      "budget_id": "B3",
+      "loai": "chi_co_dinh",
+      "ten": "Thuê nhà",
+      "so_tien": "8.000.000",
+      "chu_ky": "thang",
+      "trang_thai": "dang"
+    },
+    {
+      "budget_id": "B4",
+      "loai": "chi_bien_doi",
+      "ten": "Ăn uống",
+      "so_tien": "7.000.000",
+      "chu_ky": "thang",
+      "trang_thai": "dang"
+    },
+    {
+      "budget_id": "B5",
+      "loai": "no",
+      "ten": "Thẻ tín dụng",
+      "so_tien": "10.000.000",
+      "lai_suat_nam": "18%",
+      "tra_toi_thieu": "1.000.000",
+      "trang_thai": "dang"
+    }
   ],
   "Contributions": [],
   "Holdings": [
-    {"asset_id": "TK12", "goal_id": "G1", "so_luong": "15.000.000", "gia_von_vnd": "15.000.000"},
-    {"asset_id": "E1VFVN30", "goal_id": "G1", "so_luong": "500", "gia_von_vnd": "10.000.000"},
-    {"asset_id": "QTP", "goal_id": "G2", "so_luong": "1000", "gia_von_vnd": "12.000.000"}
+    {
+      "asset_id": "TK12",
+      "goal_id": "G1",
+      "so_luong": "15.000.000",
+      "gia_von_vnd": "15.000.000"
+    },
+    {
+      "asset_id": "E1VFVN30",
+      "goal_id": "G1",
+      "so_luong": "500",
+      "gia_von_vnd": "10.000.000"
+    },
+    {
+      "asset_id": "QTP",
+      "goal_id": "G2",
+      "so_luong": "1000",
+      "gia_von_vnd": "12.000.000"
+    }
   ],
   "Manual_Prices": [
-    {"thoi_gian": "", "ngay": "2026-10-01", "asset_id": "TK12", "gia": "", "lai_suat_nam": "5,2%"},
-    {"thoi_gian": "", "ngay": "2026-11-01", "asset_id": "TK12", "gia": "", "lai_suat_nam": "5,4%"},
-    {"thoi_gian": "", "ngay": "2026-11-01", "asset_id": "QTP", "gia": "12.500", "lai_suat_nam": ""}
+    {
+      "thoi_gian": "",
+      "ngay": "2026-10-01",
+      "asset_id": "TK12",
+      "gia": "",
+      "lai_suat_nam": "5,2%"
+    },
+    {
+      "thoi_gian": "",
+      "ngay": "2026-11-01",
+      "asset_id": "TK12",
+      "gia": "",
+      "lai_suat_nam": "5,4%"
+    },
+    {
+      "thoi_gian": "",
+      "ngay": "2026-11-01",
+      "asset_id": "QTP",
+      "gia": "12.500",
+      "lai_suat_nam": ""
+    }
   ]
 }

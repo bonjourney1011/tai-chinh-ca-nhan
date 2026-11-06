@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import UTC, date, datetime
 from pathlib import Path
 
@@ -107,14 +107,18 @@ def compute(
         if goal.deadline is None:
             res.warnings.append(f"{goal.id}: thiếu ngày đích nên bỏ qua mục tiêu này")
             continue
-        plans = _plan_options(goal, inputs.config, stocks, hist, bi, fx_spot, today, seed)
+        actual, by_asset, missing = holdings_value(inputs.holdings, goal.id, price_vnd)
+        # Plan from today: pv = money set aside at creation (goal currency) + holdings (VND).
+        pv_vnd = goal.current_pv * (fx_spot if goal.currency == "USD" else 1.0) + actual
+        plans = _plan_options(
+            replace(goal, current_pv=pv_vnd), inputs.config, stocks, hist, bi, fx_spot, today, seed
+        )
         for o, p in plans.items():
             res.plan_rows.append(plan_row(goal.id, o, p, to_asset, run_at))
             res.warnings += [f"{goal.id}/{o}: {w}" for w in p.warnings]
         chosen = raw.get("phuong_an_chon", "").strip()
         chosen = chosen if chosen in plans else "can_bang"
         plan = plans[chosen]
-        actual, by_asset, missing = holdings_value(inputs.holdings, goal.id, price_vnd)
         if missing:
             res.warnings.append(f"{goal.id}: thiếu giá cho {', '.join(sorted(set(missing)))}")
         target = {to_asset.get(k, k): w for k, w in plan.mix.weights.items() if w > 0}
