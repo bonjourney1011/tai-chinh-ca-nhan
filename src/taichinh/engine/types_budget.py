@@ -25,6 +25,7 @@ class BudgetInputs:
     liquid_assets: float
     debts: list[Debt] = field(default_factory=list)
     annual_bonus: float = 0.0
+    income_investment: float = 0.0  # courses, Upwork plan, tools: spent to raise income, never cut
 
 
 @dataclass(frozen=True)

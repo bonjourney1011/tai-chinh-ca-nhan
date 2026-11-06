@@ -65,15 +65,28 @@ function createTab_(spreadsheet, tab) {
   (TEXT_FIELDS[tab] || []).forEach(function (field) { setColumnFormat_(sheet, headers, field, '@'); });
   var formats = NUMBER_FORMATS[tab] || {};
   Object.keys(formats).forEach(function (field) { setColumnFormat_(sheet, headers, field, formats[field]); });
+  applyValidation_(sheet, tab, headers);
+  if (PYTHON_TABS.indexOf(tab) !== -1) {
+    sheet.protect().setDescription('Tab do Python ghi mỗi ngày, đừng sửa tay').setWarningOnly(true);
+  }
+  if (tab === T.config) { sheet.setColumnWidth(1, 240); sheet.setColumnWidth(2, 200); sheet.setColumnWidth(3, 560); }
+}
+
+function applyValidation_(sheet, tab, headers) {
   var lists = VALIDATION_LISTS[tab] || {};
   Object.keys(lists).forEach(function (field) {
     var rule = SpreadsheetApp.newDataValidation().requireValueInList(lists[field], true).setAllowInvalid(false).build();
     sheet.getRange(2, headers.indexOf(field) + 1, Math.max(1, sheet.getMaxRows() - 1), 1).setDataValidation(rule);
   });
-  if (PYTHON_TABS.indexOf(tab) !== -1) {
-    sheet.protect().setDescription('Tab do Python ghi mỗi ngày, đừng sửa tay').setWarningOnly(true);
-  }
-  if (tab === T.config) { sheet.setColumnWidth(1, 240); sheet.setColumnWidth(2, 200); sheet.setColumnWidth(3, 560); }
+}
+
+/** Run once after updating the enum lists in domain-constants.gs: re-applies the dropdown rules on existing tabs. */
+function refreshValidation() {
+  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  Object.keys(VALIDATION_LISTS).forEach(function (tab) {
+    var sheet = spreadsheet.getSheetByName(tab);
+    if (sheet) applyValidation_(sheet, tab, HEADERS[tab]);
+  });
 }
 
 /** Fills the Config rows only on a fresh tab (nothing below the header). */

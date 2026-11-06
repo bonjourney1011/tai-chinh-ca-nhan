@@ -141,7 +141,7 @@ def liquid_assets(
 
 def budget_inputs(rows: list[dict], liquid: float) -> BudgetInputs:
     """Yearly income goes to annual_bonus (a yearly amount; the engine lever divides by 12)."""
-    income = bonus = essential = variable = 0.0
+    income = bonus = essential = variable = invest = 0.0
     debts: list[Debt] = []
     for r in rows:
         if (r.get("trang_thai") or "dang").strip().lower() not in ("dang", ""):
@@ -158,7 +158,10 @@ def budget_inputs(rows: list[dict], liquid: float) -> BudgetInputs:
             essential += amt / 12.0 if yearly else amt
         elif kind == "chi_bien_doi":
             variable += amt / 12.0 if yearly else amt
+        elif kind == "dau_tu_thu_nhap":
+            invest += amt / 12.0 if yearly else amt
         elif kind == "no":
             debts.append(Debt((r.get("ten") or "").strip(), amt, parse_rate(r.get("lai_suat_nam")),
                               parse_number(r.get("tra_toi_thieu"))))
-    return BudgetInputs(income, essential, variable, liquid, debts, annual_bonus=bonus)
+    return BudgetInputs(income, essential, variable, liquid, debts, annual_bonus=bonus,
+                        income_investment=invest)

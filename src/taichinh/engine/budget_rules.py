@@ -25,7 +25,7 @@ def _trieu(x: float) -> str:
 
 
 def budget_metrics(b: BudgetInputs, pmt_required: float) -> BudgetMetrics:
-    expenses = b.essential_expenses + b.variable_expenses
+    expenses = b.essential_expenses + b.variable_expenses + b.income_investment
     income = max(b.income_monthly, 1.0)
     debt_min = sum(d.min_payment for d in b.debts)
     disposable = b.income_monthly - expenses - debt_min  # same definition as the Apps Script side

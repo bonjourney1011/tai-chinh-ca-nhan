@@ -20,6 +20,8 @@ def test_metrics():
     assert m.disposable == 7e6 and m.savings_rate == pytest.approx(0.35)
     assert m.feasibility == pytest.approx(4e6 / 7e6) and m.essential_ratio == 0.4
     assert m.emergency_months == 2 and m.debt_service_ratio == pytest.approx(0.05)
+    inv = br.budget_metrics(BudgetInputs(20e6, 8e6, 4e6, 16e6, income_investment=0.5e6), 4e6)
+    assert inv.disposable == 7.5e6 and inv.essential_ratio == 0.4  # counted, not essential
 
 
 @pytest.mark.parametrize("kw,months,expected", [

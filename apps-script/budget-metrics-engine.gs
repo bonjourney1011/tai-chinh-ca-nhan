@@ -64,6 +64,13 @@ function buildLevers(rows, goals, config, tyGia) {
   return out.slice(0, MAX_LEVERS);
 }
 
+/** Self-investment is a lever for income, so the note states its size and the break-even income gain. */
+function investNote(tangThu, invest, thu) {
+  if (!(invest > 0)) return tangThu ? ' Chưa có khoản đầu tư cho thu nhập (khoá học, Upwork, công cụ).' : '';
+  var pct = thu > 0 ? invest / thu : 0;
+  return ' Đang đầu tư ' + formatShortVnd(invest) + '/tháng (' + formatPercent(pct) + ' thu nhập) cho thu nhập; hoà vốn khi thu nhập tăng thêm từng đó mỗi tháng.';
+}
+
 function directionReason(thu, essentialRatio, savingsRate, thieu, cutMax) {
   if (thu <= 0) return 'Chưa có khoản thu nhập nào trong ngân sách. Thêm lương và các khoản thu để tính được.';
   if (essentialRatio > ESSENTIAL_RATIO_MAX) return 'Chi cố định đã chiếm ' + formatPercent(essentialRatio) + ' thu nhập, khó cắt thêm. Tăng thu nhập hiệu quả hơn.';
@@ -80,7 +87,8 @@ function computeBudgetMetrics(budgetRows, info) {
   var rows = activeBudgetRows(budgetRows);
   var thu = sumMonthly(rows, 'thu_nhap');
   var fixed = sumMonthly(rows, 'chi_co_dinh');
-  var chi = fixed + sumMonthly(rows, 'chi_bien_doi');
+  var invest = sumMonthly(rows, 'dau_tu_thu_nhap');  // spent on raising income; counted, never offered as a cut
+  var chi = fixed + sumMonthly(rows, 'chi_bien_doi') + invest;
   var debtMin = rows.filter(function (r) { return r.loai === 'no'; }).reduce(function (s, r) { return s + toNumberOrZero(r.tra_toi_thieu); }, 0);
   var du = thu - chi - debtMin;
   var savingsRate = thu > 0 ? du / thu : 0;
@@ -98,11 +106,13 @@ function computeBudgetMetrics(budgetRows, info) {
         lai_suat_nam: readRatePercent(r.lai_suat_nam), tra_toi_thieu: toNumberOrZero(r.tra_toi_thieu), ghi_chu: r.ghi_chu || '' };
     }),
     metrics: {
-      thu_thang: Math.round(thu), chi_thang: Math.round(chi), tra_no_toi_thieu: Math.round(debtMin), du_thang: Math.round(du),
+      thu_thang: Math.round(thu), chi_thang: Math.round(chi), dau_tu_thu_nhap_thang: Math.round(invest),
+      tra_no_toi_thieu: Math.round(debtMin), du_thang: Math.round(du),
       ty_le_tiet_kiem: roundTo(savingsRate, 3),
       quy_khan_cap_thang: chi > 0 ? roundTo(info.liquid / chi, 1) : null,
       can_gui: Math.round(canGui), kha_thi: canGui <= Math.max(du, 0), thieu: Math.round(thieu),
-      huong: tangThu ? 'tang_thu' : 'cat_chi', ly_do: directionReason(thu, essentialRatio, savingsRate, thieu, cutMax)
+      huong: tangThu ? 'tang_thu' : 'cat_chi',
+      ly_do: directionReason(thu, essentialRatio, savingsRate, thieu, cutMax) + investNote(tangThu, invest, thu)
     },
     levers: buildLevers(rows, info.goals, info.config, info.tyGia)
   };

@@ -107,6 +107,16 @@ test('direction: a shortfall bigger than a 20% cut of variable spending also mea
   assert.match(m.ly_do, /tăng thu nhập/);
 });
 
+test('dau_tu_thu_nhap counts as spending but is never offered as a cut', () => {
+  const s = household({ budget: [line('B001', 'thu_nhap', 'Lương', 20000000), line('B002', 'chi_bien_doi', 'Tiêu', 5000000),
+    line('B003', 'dau_tu_thu_nhap', 'Upwork Plus', 520000)] });
+  const b = plain(gs.buildDashboardPayload(s, TODAY).budget);
+  assert.equal(b.metrics.chi_thang, 5520000);
+  assert.equal(b.metrics.dau_tu_thu_nhap_thang, 520000);
+  assert.match(b.metrics.ly_do, /Đang đầu tư 520k/);
+  assert.ok(!b.levers.some((l) => /Upwork/.test(l.ten)));
+});
+
 test('can_gui skips low-priority (dream) goals', () => {
   const s = household();
   const before = gs.buildDashboardPayload(s, TODAY).budget.metrics.can_gui;

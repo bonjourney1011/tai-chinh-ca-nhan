@@ -65,10 +65,16 @@ Phần Python cần đọc/ghi Sheet. Trong repo GitHub vào **Settings → Secr
 2. **Khi gửi/rút tiền thật:** bấm ghi khoản gửi (hoặc rút), chọn mục tiêu, tài sản và số tiền. Giá mới nhất tự điền, có thể gõ số lượng hoặc giá nếu khác.
 3. **Tài sản nhập tay** (tiền gửi, quỹ trái phiếu...): mỗi tháng cập nhật lãi suất hoặc giá ở mục "Giá nhập tay".
 4. **Mục tiêu mới:** bấm thêm mục tiêu. Trang báo ngay "Ước tính X triệu/tháng"; sau lần chạy Python kế tiếp sẽ có 3 phương án để chọn.
-5. **Ngân sách:** nhập thu nhập, chi cố định, chi linh hoạt và các khoản nợ. Trang cho biết tháng này dư bao nhiêu, quỹ khẩn cấp đủ mấy tháng và việc nào giúp đạt mục tiêu sớm nhất.
+5. **Ngân sách:** nhập thu nhập, chi cố định, chi linh hoạt, khoản đầu tư cho thu nhập (khoá học, Upwork Plus, công cụ) và các khoản nợ. Trang cho biết tháng này dư bao nhiêu, quỹ khẩn cấp đủ mấy tháng và việc nào giúp đạt mục tiêu sớm nhất. Khoản đầu tư cho thu nhập được tính vào chi nhưng không bao giờ bị đề nghị cắt; ghi chú cho biết thu nhập cần tăng bao nhiêu để hoà vốn.
 6. **Sai số liệu:** sửa thẳng trong Sheet (không đổi tên tab, không chèn cột giữa, không xoá dòng tiêu đề). Số dư sai thì dùng "Đặt lại số dư".
 
 Quy ước nhập: `tien_co_san` là tiền có sẵn lúc đặt mục tiêu, tính bằng loại tiền của mục tiêu và **không nhập lại vào Holdings**. Giá trị hiện tại của mục tiêu = `tien_co_san` + giá trị các khoản đã gửi cho mục tiêu đó.
+
+### Khi code Apps Script đổi
+
+1. Dán lại các file `.gs` vừa đổi vào editor (so theo tên file).
+2. Nếu `domain-constants.gs` đổi danh sách lựa chọn (ví dụ thêm loại ngân sách): chạy hàm `refreshValidation` một lần để ô chọn trong Sheet nhận giá trị mới.
+3. Deploy → Manage deployments → bút chì → Version: New version → Deploy. URL `/exec` giữ nguyên.
 
 ---
 

@@ -3,6 +3,7 @@ export const BUDGET_KINDS = [
   { value: 'thu_nhap', label: 'Thu nhập' },
   { value: 'chi_co_dinh', label: 'Chi cố định' },
   { value: 'chi_bien_doi', label: 'Chi thay đổi' },
+  { value: 'dau_tu_thu_nhap', label: 'Đầu tư cho thu nhập' },
   { value: 'no', label: 'Nợ' }
 ];
 const isDebt = (v) => v.loai === 'no';
